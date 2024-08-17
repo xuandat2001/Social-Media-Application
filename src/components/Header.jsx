@@ -35,7 +35,7 @@ function Header(){
                                 <div className='col-9'>
                                     <ul className="nav nav-header">
                                         <li className="nav-item">
-                                            <a className="nav-link active" aria-current="page" href="#">Homepage</a>
+                                            <a className="nav-link active" aria-current="page" href="#">Home Page</a>
                                         </li>
                                         <li className="nav-item">
                                             <a className="nav-link" href="#">Profile</a>

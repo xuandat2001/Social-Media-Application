@@ -61,3 +61,16 @@
     color: #FED7FF;
 }
 
+.input-search-header::-webkit-search-clear-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.input-search-header::-moz-search-clear-button {
+    display: none;
+}
+
+.input-search-header::-ms-clear {
+    display: none;
+}
+
