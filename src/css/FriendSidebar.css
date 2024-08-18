@@ -1,0 +1,15 @@
+.friend-sidebar {
+    width: 15%;
+    padding: 15px;
+    padding-left: 20px;
+    background-color: #c1c2c580;
+    height: 100vh;
+    position: fixed;
+    top: 120px;
+    right: 0;
+    border-radius: 10px;
+}
+
+h2 {
+    text-align: center;
+}

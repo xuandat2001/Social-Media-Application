@@ -9,9 +9,10 @@ import CreatePost from './pages/User-Site/CreatePost.jsx';
 import Header from './components/Header.jsx';
 import SharePost from './pages/User-Site/SharePost.jsx';
 import EditPost from './pages/User-Site/EditPost.jsx';
+import Home from './pages/Home.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Group/>
+    <Home/>
   </StrictMode>,
 )
