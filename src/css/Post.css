@@ -1,0 +1,75 @@
+.header{
+    background-color: #FED7FF;
+    height: 75px;
+    width: 100%;
+    font-size: 32px;
+    text-align: center;  
+}
+
+.nav-insert-buttons{
+   width: 230px;
+   border-radius: 10px;
+}
+
+.nav-insert-buttons a{
+    margin: 10px;
+}
+
+.text-area-div{
+    margin: 10px 10px 10px 25px;
+           
+}
+
+.text-area-div textarea{
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.custom-container{
+    width: 600px;
+}
+
+.add-border-bottom{
+    border-bottom: 1px solid black;
+    margin-bottom: 25px;
+}
+
+.icon-color{
+    color: black;
+}
+
+.add-border{
+    border: 1px solid black;
+}
+
+.add-margin-right{
+    margin-right: 10px;
+}
+
+.add-margin-bottom{
+    margin-bottom: 20px;
+}
+
+.custom-post-button{
+    background-color: #FED7FF;
+    border-radius: 15px;
+    width: 70px;
+    height: 30px;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.custom-share-button{
+    background-color: #FED7FF;
+    border-radius: 15px;
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+    font-weight: bold;
+ 
+}
+
+
+
+
+
