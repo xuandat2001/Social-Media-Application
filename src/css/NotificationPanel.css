@@ -1,0 +1,97 @@
+.notification-panel {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    width: 300px;
+    z-index: 1000;
+  }
+  
+  .notification-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333; 
+  }
+  
+  .notification-section {
+    margin-bottom: 20px;
+  }
+  
+  .notification-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333; /* Ensure section titles are visible */
+  }
+  
+  .friend-request {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+  .friend-request-content {
+    flex-grow: 1;
+    color: #333; /* Adjust text color to a dark color */
+  }
+  
+  .request-info {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+  }
+  
+  .request-actions {
+    margin-top: 10px;
+  }
+  
+  .accept-button, .reject-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .accept-button {
+    background-color: #b5b5b5;
+    color: rgb(0, 0, 0);
+    margin-right: 10px;
+  }
+  
+  .reject-button {
+    background-color: #000000;
+    color: white;
+  }
+  
+  .newest-notification {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .notification-content {
+    flex-grow: 1;
+    color: #333; /* Adjust text color to a dark color */
+  }
+  
+  .comment {
+    display: block;
+    margin-top: 5px;
+    font-style: italic;
+    color: #555; /* Adjust comment color to be visible */
+  }
+  

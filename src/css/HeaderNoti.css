@@ -1,0 +1,19 @@
+.nav-icons-noti {
+  display: flex;
+  justify-content: flex-end;  
+  align-items: center;
+  gap: 20px;  
+}
+
+.material-icons {
+  font-size: 24px;
+  color: #ffffff; 
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  padding: 10px;
+  border-radius: 50%;
+}
+.material-icons:hover {
+  background-color: #e4e6eb;
+  color: #1c1e21;
+}

@@ -1,6 +1,8 @@
 import '../css/header.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import HeaderNoti from './HeaderNoti';
+
 function Header(){
     return(
         <>
@@ -47,7 +49,7 @@ function Header(){
                                             <a className="nav-link" href="#">Group</a>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Notification</a>
+                                            <HeaderNoti/>
                                         </li>
                                     </ul>
                                 </div>
