@@ -12,6 +12,6 @@ import EditPost from './pages/User-Site/EditPost.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <EditPost/>
+    <Group/>
   </StrictMode>,
 )
