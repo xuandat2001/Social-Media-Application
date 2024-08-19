@@ -1,0 +1,26 @@
+.create-post {
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.create-post .card-body {
+    padding: 10px 20px;
+}
+
+.create-post .card-footer {
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    border-top: 1px solid #ddd;
+}
+
+.create-post .form-control {
+    border: none;
+    background-color: #f0f2f5;
+    padding-left: 15px;
+}
+.icon img{
+    width: 20px;  
+    height: 20px; 
+    object-fit: contain; 
+}

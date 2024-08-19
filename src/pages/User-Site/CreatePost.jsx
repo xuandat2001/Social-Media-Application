@@ -1,8 +1,7 @@
 import React from 'react';
 import '../../css/Post.css'
 import dogImage from '../../image/white-dog-names-1-modified.png'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faImage, faFaceSmile, faLocationDot, faEllipsis, faCircleXmark} from "@fortawesome/free-solid-svg-icons";
+
 
 function CreatePost(){
     return (
