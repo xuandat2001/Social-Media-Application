@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear,faThumbsUp,faShare,faComment } from '@fortawesome/free-solid-svg-icons';
 import '../css/post.css';
+import Reaction from './Reaction.jsx';
+
+
 function Post ({avatar,userName,content,logo, image,numberOfReaction, numberOfComment}){
+    const [showReactions, setShowReactions] = useState(false);
     return (
         <>
             <div className="container container-post">
                 <div className="row">
-
                     <div className="col-11 d-flex align-items-center">
                         <img className="avatar me-3" src={avatar} alt="User avatar" />
                         <div className="post-info">
@@ -38,9 +42,10 @@ function Post ({avatar,userName,content,logo, image,numberOfReaction, numberOfCo
                     
                 </div>
                 <div className='line '></div>
-                <div className='row reaction justify-content-between'>
-                    <div className='col-4 d-flex justify-content-start'>
+                <div className='row reaction justify-content-between' >
+                    <div className='col-4 d-flex justify-content-start position-relative' onMouseEnter={() => setShowReactions(true)} onMouseLeave={() => setShowReactions(false)}>
                         <button><FontAwesomeIcon icon={faThumbsUp} /> Likes</button>
+                        <Reaction showReactions={showReactions} />
                     </div>
                     <div className='col-4 d-flex justify-content-center'>
                         <button><FontAwesomeIcon icon={faComment} /> Comment</button>
@@ -49,9 +54,8 @@ function Post ({avatar,userName,content,logo, image,numberOfReaction, numberOfCo
                         <button><FontAwesomeIcon icon={faShare} /> Share</button>
                     </div>
                 </div>
-
-
             </div>
+            
         </>
     )
 }

@@ -1,9 +1,45 @@
 import React from 'react';
+import Post from '../components/Post.jsx' ;
 import '../css/Profile.css';
+import testImage from '../image/Screenshot 2024-08-12 000128.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 
-
-const Profile = () => {
+function Profile  ()  {
+  const posts = [
+    { 
+      id : 1,
+      avatar : testImage,
+      userName : "Smiling",
+      content : "Hello",
+      logo    : <FontAwesomeIcon icon={faGlobe} />,
+      image   : testImage,
+      numberOfReaction : 62,
+      numberOfComment : 10
+    },
+    { 
+      id : 2,
+      avatar : testImage,
+      userName : "Smiling",
+      content : "Hello",
+      logo    : <FontAwesomeIcon icon={faGlobe} />,
+      image   : testImage,
+      numberOfReaction : 62,
+      numberOfComment : 10
+    },
+    { 
+      id : 3,
+      avatar : testImage,
+      userName : "Smiling",
+      content : "Hello",
+      logo    : <FontAwesomeIcon icon={faGlobe} />,
+      image   : testImage,
+      numberOfReaction : 62,
+      numberOfComment : 10
+    }
+  ];
   return (
+    
     <div className="profile-container">
       <div className="main-content">
         <div className="header">
@@ -30,87 +66,9 @@ const Profile = () => {
           <hr/>
         </div>
         <div className="profile-content">
-          <div className="post">
-            <div className="post-header">
-              <div className="post-pic"></div> {/* pfp */}
-              <div className="profile-pic-post">
-            </div><p>Smiling <span>(updated his profile)</span> - 1p</p>
-            </div>
-            <div className="post-body">
-              <div className="post-img"></div> {/* post image */}
-            </div>
-            <hr />
-            <div className="post-actions">
-              <button>Like</button>
-              <button>Comment</button>
-              <button>Share</button>
-            </div>
-          </div>
-          <div className="post">
-            <div className="post-header">
-              <div className="post-pic"></div> {/* Replace with post picture */}
-              <p>Smiling <span>(updated his profile)</span> - 1p</p>
-            </div>
-            <div className="post-body">
-              <p>Post 2</p>
-              <div className="post-img"></div> {/* Replace with post image */}
-            </div>
-            <hr />
-            <div className="post-actions">
-              <button>Like</button>
-              <button>Comment</button>
-              <button>Share</button>
-            </div>
-          </div>
-          <div className="post">
-            <div className="post-header">
-              <div className="post-pic"></div> {/* Replace with post picture */}
-              <p>Smiling <span>(updated his profile)</span> - 1p</p>
-            </div>
-            <div className="post-body">
-              <p>Post 3</p>
-              <div className="post-img"></div> {/* Replace with post image */}
-            </div>
-            <hr />
-            <div className="post-actions">
-              <button>Like</button>
-              <button>Comment</button>
-              <button>Share</button>
-            </div>
-          </div>
-          <div className="post">
-            <div className="post-header">
-              <div className="post-pic"></div> {/* Replace with post picture */}
-              <p>Smiling <span>(updated his profile)</span> - 1p</p>
-            </div>
-            <div className="post-body">
-              <p>Post 4</p>
-              <div className="post-img"></div> {/* Replace with post image */}
-            </div>
-            <hr />
-            <div className="post-actions">
-              <button>Like</button>
-              <button>Comment</button>
-              <button>Share</button>
-            </div>
-          </div>
-
-          <div className="post">
-            <div className="post-header">
-              <div className="post-pic"></div> {/* Replace with post picture */}
-              <p>Smiling <span>(updated his profile)</span> - 1p</p>
-            </div>
-            <div className="post-body">
-              <p>Post 5</p>
-              <div className="post-img"></div> {/* Replace with post image */}
-            </div>
-            <hr />
-            <div className="post-actions">
-              <button>Like</button>
-              <button>Comment</button>
-              <button>Share</button>
-            </div>  
-          </div>
+        {posts.map((post) => (
+                  <Post key = {post.id} avatar={post.avatar} userName={post.userName} content={post.content} logo={post.logo} image={post.image} numberOfReaction={post.numberOfReaction} numberOfComment={post.numberOfComment}/>
+                ))}
         </div>
       </div>
       <div className="interaction-sidebar">

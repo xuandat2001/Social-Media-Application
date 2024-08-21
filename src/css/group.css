@@ -47,3 +47,10 @@
     right: 20px;
     width: 580px; 
 }
+.group-button{
+    margin-top: 20px;
+}
+.group-button .group-invite{
+    background-color: #C00F0C;
+    color: white;
+}
