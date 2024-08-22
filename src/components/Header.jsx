@@ -1,6 +1,7 @@
 import '../css/header.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { NavLink } from 'react-router-dom';
 import HeaderNoti from './HeaderNoti';
 
 function Header(){
@@ -37,16 +38,16 @@ function Header(){
                                 <div className='col-9'>
                                     <ul className="nav nav-header">
                                         <li className="nav-item">
-                                            <a className="nav-link active" aria-current="page" href="#">Home Page</a>
+                                            <NavLink className="nav-link" to="/" end>Home Page</NavLink>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Profile</a>
+                                            <NavLink className="nav-link" to="/profile">Profile</NavLink>
                                         </li>
                                         <li className="nav-item">
                                             <a className="nav-link" href="#">Friend</a>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Group</a>
+                                            <NavLink className="nav-link" to="/group">Group</NavLink>
                                         </li>
                                         <li className="nav-item">
                                             <HeaderNoti/>
