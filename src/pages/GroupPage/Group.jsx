@@ -43,7 +43,6 @@ function Group(){
     
     return(
       <div className="group-page">
-          <Header/>
           <GroupHeader/>
           <div className="container-fluid">
 
