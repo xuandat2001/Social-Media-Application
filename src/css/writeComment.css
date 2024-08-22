@@ -1,0 +1,56 @@
+.show-comment{
+    background-color: #d8d8d8;
+    border-radius: 10px;
+    max-height: 200px; 
+    overflow-x: hidden; 
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.header-comment{
+    border-bottom: 1px solid #9c9c9c;
+    position: sticky;
+}
+.comment-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Optional for dimming effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.comment-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%; /* Adjust size as needed */
+    max-width: 600px; /* Limit max width */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.header-comment button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.header-comment h3 {
+    margin: 0;
+}
+.show-comment::-webkit-scrollbar {
+    width: 8px;
+}
+
+.show-comment::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+
