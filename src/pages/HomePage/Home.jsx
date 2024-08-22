@@ -42,9 +42,6 @@ function Home() {
       ];
     return (
         <>
-            <div className="header">
-                <Header />
-            </div>
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-8  posts">
