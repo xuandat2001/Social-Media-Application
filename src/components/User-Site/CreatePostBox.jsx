@@ -1,14 +1,16 @@
 import React from 'react';
-import '../../css/Post.css'
-import dogImage from '../../image/white-dog-names-1-modified.png'
+import '../../css/postBox.css';
+import dogImage from '../../image/white-dog-names-1-modified.png';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark, faImage, faFaceSmile, faLocationDot, faEllipsis } from "@fortawesome/free-solid-svg-icons";
 
 
-function CreatePost(){
+function CreatePostBox(){
     return (
         <>
             <div className="container custom-container">
                 
-                <div className="row header add-border-bottom">
+                <div className="row headerBox add-border-bottom">
                     <div className='col-11'>
                         <strong>Create Post</strong>
                     </div>
@@ -56,4 +58,4 @@ function CreatePost(){
     )
 }
 
-export default CreatePost
+export default CreatePostBox;

@@ -1,9 +1,10 @@
-.header{
-    background-color: #FED7FF;
+.headerBox{
+    background-color: #FED7FF !important;
     height: 75px;
     width: 100%;
     font-size: 32px;
     text-align: center;  
+    padding: 12px;
 }
 
 .nav-insert-buttons{

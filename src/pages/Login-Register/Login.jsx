@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import '../../css/Login.css';
+import React, { useState } from "react";
+import "../../css/Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const sampleUsers = [
-    { username: 'johndoe', password: 'password123' },
-    { username: 'janedoe', password: 'securepass' },
-    { username: 'admin', password: 'adminpass' }
+    { username: "johndoe", password: "password123" },
+    { username: "janedoe", password: "securepass" },
+    { username: "admin", password: "adminpass" },
   ];
 
   const handleLogin = (e) => {
     e.preventDefault();
-    
+
     const user = sampleUsers.find(
       (user) => user.username === username && user.password === password
     );
 
     if (user) {
-      alert('Login successful!');
+      alert("Login successful!");
       // return to homepage (or profile page)
     } else {
-      setLoginError('Invalid username or password');
+      setLoginError("Invalid username or password");
     }
   };
 
@@ -55,7 +55,9 @@ const Login = () => {
         </form>
         <hr />
         <div className="signup">
-          <p className="register-p">Don't have an <br /> account yet?</p>
+          <p className="register-p">
+            Don't have an <br /> account yet?
+          </p>
           <button className="sign-up-button">Sign Up</button>
         </div>
       </div>

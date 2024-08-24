@@ -1,45 +1,44 @@
-import React from 'react';
-import Post from '../../components/Post.jsx' ;
-import '../../css/Profile.css';
-import testImage from '../../image/Screenshot 2024-08-12 000128.png';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
+import Post from "../../components/Post.jsx";
+import "../../css/Profile.css";
+import testImage from "../../image/Screenshot 2024-08-12 000128.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 
-function Profile  ()  {
+function Profile() {
   const posts = [
-    { 
-      id : 1,
-      avatar : testImage,
-      userName : "Smiling",
-      content : "Hello",
-      logo    : <FontAwesomeIcon icon={faGlobe} />,
-      image   : testImage,
-      numberOfReaction : 62,
-      numberOfComment : 10
+    {
+      id: 1,
+      avatar: testImage,
+      userName: "Smiling",
+      content: "Hello",
+      logo: <FontAwesomeIcon icon={faGlobe} />,
+      image: testImage,
+      numberOfReaction: 62,
+      numberOfComment: 10,
     },
-    { 
-      id : 2,
-      avatar : testImage,
-      userName : "Smiling",
-      content : "Hello",
-      logo    : <FontAwesomeIcon icon={faGlobe} />,
-      image   : testImage,
-      numberOfReaction : 62,
-      numberOfComment : 10
+    {
+      id: 2,
+      avatar: testImage,
+      userName: "Smiling",
+      content: "Hello",
+      logo: <FontAwesomeIcon icon={faGlobe} />,
+      image: testImage,
+      numberOfReaction: 62,
+      numberOfComment: 10,
     },
-    { 
-      id : 3,
-      avatar : testImage,
-      userName : "Smiling",
-      content : "Hello",
-      logo    : <FontAwesomeIcon icon={faGlobe} />,
-      image   : testImage,
-      numberOfReaction : 62,
-      numberOfComment : 10
-    }
+    {
+      id: 3,
+      avatar: testImage,
+      userName: "Smiling",
+      content: "Hello",
+      logo: <FontAwesomeIcon icon={faGlobe} />,
+      image: testImage,
+      numberOfReaction: 62,
+      numberOfComment: 10,
+    },
   ];
   return (
-    
     <div className="profile-container">
       <div className="main-content">
         <div className="header">
@@ -48,27 +47,44 @@ function Profile  ()  {
             <div className="profile-details">
               <h1>Minh Nguyen</h1>
               <p>1 Post | 20 friends</p>
-              <p>smiling@gmail.com</p><br/>
-              <p className="bio">BIO<br/>Be Individual, Be authentic</p>
+              <p>smiling@gmail.com</p>
+              <br />
+              <p className="bio">
+                BIO
+                <br />
+                Be Individual, Be authentic
+              </p>
               <div className="profile-actions">
                 <p>Edit</p> {/*will be linked later*/}
               </div>
             </div>
           </div>
-          <hr/>
+          <hr />
           <div className="profile-action-container">
             <div className="profile-actions">
-                <button>Post</button>{/*will be linked later*/}
-                <button>Friend</button>{/*will be linked later*/}
-                <button>Group</button>{/*will be linked later*/}
+              <button>Post</button>
+              {/*will be linked later*/}
+              <button>Friend</button>
+              {/*will be linked later*/}
+              <button>Group</button>
+              {/*will be linked later*/}
             </div>
           </div>
-          <hr/>
+          <hr />
         </div>
         <div className="profile-content">
-        {posts.map((post) => (
-                  <Post key = {post.id} avatar={post.avatar} userName={post.userName} content={post.content} logo={post.logo} image={post.image} numberOfReaction={post.numberOfReaction} numberOfComment={post.numberOfComment}/>
-                ))}
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              avatar={post.avatar}
+              userName={post.userName}
+              content={post.content}
+              logo={post.logo}
+              image={post.image}
+              numberOfReaction={post.numberOfReaction}
+              numberOfComment={post.numberOfComment}
+            />
+          ))}
         </div>
       </div>
       <div className="interaction-sidebar">
@@ -88,6 +104,6 @@ function Profile  ()  {
       </div>
     </div>
   );
-};
+}
 
 export default Profile;

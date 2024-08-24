@@ -1,5 +1,5 @@
 import React from "react";
-import '../../css/Post.css'
+import '../../css/postBox.css';
 import dogImage from '../../image/yellow-dog-image.jpg'
 import dogCircleImage from '../../image/yellow-dog-circle.png'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,12 +7,12 @@ import { faImage, faFaceSmile, faLocationDot, faEllipsis, faCircleXmark, faEarth
 
 
 
-function EditPost(){
+function EditPostBox(){
     return(
         <>
         <div className="container custom-container">
             
-            <div className="row header add-border-bottom">
+            <div className="row headerBox add-border-bottom">
                 <div className='col-11'>
                     <strong>Edit Post</strong>
                 </div>
@@ -63,4 +63,4 @@ function EditPost(){
     )
 }
 
-export default EditPost
+export default EditPostBox;

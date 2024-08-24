@@ -1,15 +1,15 @@
 import React from "react";
-import '../../css/Post.css'
+import '../../css/postBox.css';
 import dogImage from '../../image/white-dog-names-1-modified.png'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
-function SharePost(){
+function SharePostBox(){
     return(
             <>
             <div className="container custom-container">
                 
-                <div className="row header add-border-bottom">
+                <div className="row headerBox add-border-bottom">
                     <div className='col-11'>
                         <strong>Share Post</strong>
                     </div>
@@ -50,4 +50,4 @@ function SharePost(){
 }
 
 
-export default SharePost
+export default SharePostBox;
