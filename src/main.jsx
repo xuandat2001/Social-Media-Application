@@ -22,7 +22,8 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/group" element={<Group />} />
-        <Route path="/profile" element={<StrangerProfile />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/strangerprofile" element={<StrangerProfile />} />
       </Routes>
     </Router>
   </StrictMode>,
