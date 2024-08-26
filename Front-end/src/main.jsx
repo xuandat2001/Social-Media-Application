@@ -14,6 +14,8 @@ import Home from './pages/HomePage/Home.jsx';
 import Post from './components/Post.jsx';
 import Profile from './pages/Profile-user/Profile.jsx';
 import StrangerProfile from './pages/Stranger-profile/strangerProfile.jsx';
+import FriendList from './pages/FriendList/FriendList.jsx';
+import GroupList from './pages/GroupPage/GroupList.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,7 +23,9 @@ createRoot(document.getElementById('root')).render(
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/group" element={<Group />} />
+        <Route path="/groupList" element={<GroupList />} />
+        {/* <Route path="/group" element={<Group />} /> */}
+        <Route path="/friendList" element={<FriendList />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/strangerprofile" element={<StrangerProfile />} />
       </Routes>

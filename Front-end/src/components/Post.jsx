@@ -72,11 +72,8 @@ function Post({
         </div>
         <div className="line "></div>
         <div className="row reaction justify-content-between">
-          <div
-            className="col-4 d-flex justify-content-start position-relative"
-            onMouseEnter={() => setShowReactions(true)}
-            onMouseLeave={() => setShowReactions(false)}
-          >
+          <div className="col-4 d-flex justify-content-start position-relative"
+            onClick={() => setShowReactions(true)}>
             <button>
               <FontAwesomeIcon icon={faThumbsUp} /> Likes
             </button>

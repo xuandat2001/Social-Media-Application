@@ -55,12 +55,12 @@ function Header() {
                         </NavLink>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <a className="nav-link" href="/friendList">
                           Friend
                         </a>
                       </li>
                       <li className="nav-item">
-                        <NavLink className="nav-link" to="/group">
+                        <NavLink className="nav-link" to="/groupList">
                           Group
                         </NavLink>
                       </li>
