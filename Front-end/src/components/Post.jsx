@@ -9,7 +9,8 @@ import {
 import "../css/post.css";
 import Reaction from "./Reaction.jsx";
 import CommentBox from "./CommentBox.jsx";
-
+import { useSelector } from "react-redux";
+// manage global state across multiple Post components, using React Context : DATTT
 function Post({
   avatar,
   userName,
@@ -19,6 +20,7 @@ function Post({
   numberOfReaction,
   numberOfComment,
 }) {
+  const {icon,color,text} = useSelector(state=> state.reaction)
   const [showReactions, setShowReactions] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const closeComments = () => {
@@ -74,10 +76,10 @@ function Post({
         <div className="row reaction justify-content-between">
           <div className="col-4 d-flex justify-content-start position-relative"
             onClick={() => setShowReactions(true)}>
-            <button>
-              <FontAwesomeIcon icon={faThumbsUp} /> Likes
+            <button style={{ color: color }}>
+              <FontAwesomeIcon icon={icon} /> {text}
             </button>
-            <Reaction showReactions={showReactions} />
+            <Reaction showReactions={showReactions} setShowReactions={setShowReactions} />
           </div>
           <div
             className="col-4 d-flex justify-content-center"

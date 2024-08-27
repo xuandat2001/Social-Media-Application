@@ -16,20 +16,24 @@ import Profile from './pages/Profile-user/Profile.jsx';
 import StrangerProfile from './pages/Stranger-profile/strangerProfile.jsx';
 import FriendList from './pages/FriendList/FriendList.jsx';
 import GroupList from './pages/GroupPage/GroupList.jsx';
+import { Provider } from 'react-redux';
+import { store } from './Redux/Store.js';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/groupList" element={<GroupList />} />
-        {/* <Route path="/group" element={<Group />} /> */}
-        <Route path="/friendList" element={<FriendList />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/strangerprofile" element={<StrangerProfile />} />
-      </Routes>
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/groupList" element={<GroupList />} />
+          {/* <Route path="/group" element={<Group />} /> */}
+          <Route path="/friendList" element={<FriendList />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/strangerprofile" element={<StrangerProfile />} />
+        </Routes>
+      </Router>
+    </Provider>
   </StrictMode>,
 )
 
