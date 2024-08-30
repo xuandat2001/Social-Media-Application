@@ -4,3 +4,5 @@ const users = [
     { username: "admin", password: "adminpass" },
     { username: "abcd", password:"1234"},
 ];
+
+exports.users = users;
