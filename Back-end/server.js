@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const PORT = 3000;
 require('dotenv').config();
+const authRoutes = require('./server/routes/auth'); 
 
 
 //connection of frontend with server 
@@ -14,7 +15,8 @@ app.use(cors(
         origin : 'http://localhost:5173',
     }
 ));
-
+app.use(express.json());
+app.use('/auth', authRoutes);
 
 //connection of mongodatabase with server
 mongoose.connect('mongodb+srv://AeRMITNo1:v2DUKnapXCtwNIxA@socialmediaapplinkbridg.g4vbw.mongodb.net/?retryWrites=true&w=majority&appName=SocialMediaAppLinkBridge')
