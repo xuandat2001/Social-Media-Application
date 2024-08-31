@@ -1,29 +1,39 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../css/Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const navigate = useNavigate();
 
-  const sampleUsers = [
-    { username: "johndoe", password: "password123" },
-    { username: "janedoe", password: "securepass" },
-    { username: "admin", password: "adminpass" },
-  ];
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginError(''); 
+  
+    try {
+      // Get reqsponse from back-end server
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    const user = sampleUsers.find(
-      (user) => user.username === username && user.password === password
-    );
-
-    if (user) {
-      alert("Login successful!");
-      // return to homepage (or profile page)
-    } else {
-      setLoginError("Invalid username or password");
+      // Checking server response
+      if (response.ok) {
+        const data = await response.json(); 
+        alert('Login successful!');
+        navigate('/'); // Redirect to homepage 
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message);
+      }
+    } catch (err) {
+      console.error('Error:', error);
+      alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
     }
   };
 

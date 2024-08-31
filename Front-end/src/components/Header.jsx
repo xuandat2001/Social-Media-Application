@@ -70,12 +70,14 @@ function Header() {
                     </ul>
                   </div>
                   <div className="col-3">
+                    <NavLink to="/login">
                     <button
                       className="btn btn-sign-out align-items-center"
                       type="button"
                     >
-                      Sign Out
+                      Sign In
                     </button>
+                    </NavLink>
                   </div>
                 </div>
               </div>
