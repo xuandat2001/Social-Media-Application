@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const {userRoutes} = require('./routes/users.js');
+const {authRoutes} = require('./routes/auth.js');
 
 const app = express();
 
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
 
 
 // Middleware setup
