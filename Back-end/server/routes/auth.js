@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { users } = require('.../data.js');
+const { users } = require('../data.js');
 const cookieParser = require('cookie-parser');
 const COOKIE_SECRET = require('../cookieSecret');
 
