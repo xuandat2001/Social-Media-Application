@@ -1,4 +1,4 @@
-const users = require('../udata').users;
+const users = require('../data.js').users;
 
 const register = (req, res, next) => {
     const username = req.body.name;

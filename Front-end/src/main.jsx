@@ -17,6 +17,7 @@ import StrangerProfile from './pages/Stranger-profile/strangerProfile.jsx';
 import FriendList from './pages/FriendList/FriendList.jsx';
 import GroupList from './pages/GroupPage/GroupList.jsx';
 import Login from './pages/Login-Register/Login.jsx';
+import Register from './pages/Login-Register/Register.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/profile" element={<Profile />} />
         <Route path="/strangerprofile" element={<StrangerProfile />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   </StrictMode>,

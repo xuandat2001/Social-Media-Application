@@ -3,9 +3,12 @@ const cors = require('cors');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const COOKIE_SECRET = require('./server/cookieSecret');
+
 const PORT = 3000;
 require('dotenv').config();
-const authRoutes = require('./server/routes/auth'); 
+const {userRoutes} = require('./server/routes/users.js');
 
 
 //connection of frontend with server 
@@ -16,7 +19,9 @@ app.use(cors(
     }
 ));
 app.use(express.json());
-app.use('/auth', authRoutes);
+app.use(cookieParser(COOKIE_SECRET));
+app.use('/users', userRoutes);
+
 
 //connection of mongodatabase with server
 // mongoose.connect('mongodb+srv://AeRMITNo1:v2DUKnapXCtwNIxA@socialmediaapplinkbridg.g4vbw.mongodb.net/?retryWrites=true&w=majority&appName=SocialMediaAppLinkBridge')
