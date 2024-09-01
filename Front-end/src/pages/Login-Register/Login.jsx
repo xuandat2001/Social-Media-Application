@@ -25,7 +25,7 @@ const Login = () => {
       // Checking server response
       if (response.ok) {
         const data = await response.json(); 
-        alert('Login successful!');
+        alert(data.message); 
         navigate('/'); // Redirect to homepage 
       } else {
         const errorData = await response.json();

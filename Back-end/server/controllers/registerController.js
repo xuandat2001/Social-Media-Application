@@ -1,11 +1,16 @@
 const users = require('../data.js').users;
 
 const register = (req, res, next) => {
-    const username = req.body.name;
-    const password = req.body.password;
+    const { username, password, confirmPassword } = req.body;
     const ids = users.map((p)=> p.id);
     const maxId = Math.max(...ids);
     const newId = maxId + 1;
+
+    // Check if password and confirmPassword match
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: 'Passwords do not match.' });
+    }
+
     // Check if the username already exists
     const existingUser = users.find(user => user.username === username);
     if (existingUser) {
