@@ -1,21 +1,29 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const {userRoutes} = require('./routes/users.js');
+const {userRouter} = require('./routers/usersRouter.js');
 
 const app = express();
-
-app.use('/users', userRoutes);
-
+// initiliaze session and cookie
+// app.use(   
+//   session({
+//       secret : "social-application",
+//       saveUninitialized: false,
+//       resave:false,
+//       cookie :{
+//           maxAge: 60000 * 60,
+//       }
+//   })
+// );
 
 // Middleware setup
 app.use(express.json());  // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded form data
 app.use(cors());  // Enable CORS
-
+app.use(userRouter);
 // MongoDB connection URL
 const CONNECTION_URL = 'mongodb+srv://AeRMITNo1:v2DUKnapXCtwNIxA@socialmediaapplinkbridg.g4vbw.mongodb.net/FullStackRMIT'
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB and start the server
 mongoose.connect(CONNECTION_URL)
