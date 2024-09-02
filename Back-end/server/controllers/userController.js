@@ -1,4 +1,3 @@
-const users = require('../routes/users')
 const UserModel = require('../models/userModel')
 
 exports.user = async (req, res, next) => {
