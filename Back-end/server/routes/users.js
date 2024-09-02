@@ -8,8 +8,6 @@ const router = express.Router();
 router.get('/', userController.get);
 router.post('/register', express.json(), registerController.register);
 router.post('/login', express.json(), loginController.login);
-
-// POST request to verify credentials
-
+router.post('/verify', express.json(), loginController.verify);
 
 exports.userRoutes = router;

@@ -1,5 +1,3 @@
-const cookieParser = require('cookie-parser');
-const COOKIE_SECRET = require('../cookieSecret');
 const { users } = require('../data.js');
 
 
@@ -16,6 +14,16 @@ const login = (req, res, next) => {
     }
 };
 
+const verify = (req, res) => {
+    const { signedCookies } = req;
+    if (signedCookies && signedCookies.username) {
+        return res.json({ message: 'Cookie is valid!' });
+    } else {
+        return res.status(401).json({ message: 'Unauthorized: Invalid cookie' });
+    }
+};
+
 module.exports = {
-    login
+    login,
+    verify,
 };
