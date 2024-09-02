@@ -14,4 +14,32 @@ const createUserValidationSchema = {
         }
     }
 };
-module.exports ={createUserValidationSchema};
+const createGroupValidationSchema = {
+    groupName : {
+        notEmpty : {
+            errorMessage : "Username cannot be empty",
+        },
+    },
+};
+const createPostValidationSchema = {
+    content : {
+        notEmpty : {
+            errorMessage : "Content cannot be empty",
+        },
+    },
+};
+const createNotificationValidationSchema = {
+    notiType : {
+        notEmpty : {
+            errorMessage : "Content cannot be empty",
+        },
+    },
+};
+const createCommentValidationSchema = {
+    content : {
+        notEmpty : {
+            errorMessage : "Content cannot be empty",
+        },
+    },
+};
+module.exports ={createUserValidationSchema,createGroupValidationSchema,createPostValidationSchema,createNotificationValidationSchema,createCommentValidationSchema };

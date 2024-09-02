@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const {userRouter} = require('./routers/usersRouter.js');
+const {mainRouter} = require('./routers/mainRouter.js');
 
 const app = express();
 // initiliaze session and cookie
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());  // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true }));  // Parse URL-encoded form data
 app.use(cors());  // Enable CORS
-app.use(userRouter);
+app.use(mainRouter);
 // MongoDB connection URL
 const CONNECTION_URL = 'mongodb+srv://AeRMITNo1:v2DUKnapXCtwNIxA@socialmediaapplinkbridg.g4vbw.mongodb.net/FullStackRMIT'
 const PORT = process.env.PORT || 3000;

@@ -16,24 +16,24 @@ import Profile from './pages/Profile-user/Profile.jsx';
 import StrangerProfile from './pages/Stranger-profile/strangerProfile.jsx';
 import FriendList from './pages/FriendList/FriendList.jsx';
 import GroupList from './pages/GroupPage/GroupList.jsx';
-import { Provider } from 'react-redux';
-import { store } from './Redux/Store.js';
+import Login from './pages/Login-Register/Login.jsx';
+import Register from './pages/Login-Register/Register.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Provider store={store}>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/groupList" element={<GroupList />} />
-          {/* <Route path="/group" element={<Group />} /> */}
-          <Route path="/friendList" element={<FriendList />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/strangerprofile" element={<StrangerProfile />} />
-        </Routes>
-      </Router>
-    </Provider>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/groupList" element={<GroupList />} />
+        {/* <Route path="/group" element={<Group />} /> */}
+        <Route path="/friendList" element={<FriendList />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/strangerprofile" element={<StrangerProfile />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   </StrictMode>,
 )
 

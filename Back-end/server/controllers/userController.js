@@ -5,7 +5,6 @@ const getAllUsers = async (req, res) => {
     const { query: { filter, value } } = req;
         let query = {};
         if (filter && value) {
-            
             query[filter] = { $regex: value, $options: 'i' }; // Case-insensitive search
         }
         const users = await userModel.find(query);
