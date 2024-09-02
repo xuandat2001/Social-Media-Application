@@ -4,6 +4,8 @@ const userSchema = mongoose.Schema({
     userName: String,
     password: String,
     pictureURL: String,
+    fullname: String,
+    email: String
 
 });
 

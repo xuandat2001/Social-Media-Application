@@ -1,7 +1,7 @@
 const UserModel = require('../models/userModel')
 
 const register = (req, res, next) => {
-    const { username, password, confirmPassword } = req.body;
+    const { username, password, confirmPassword, fullname, email } = req.body;
     
     // Check if password and confirmPassword match
     if (password !== confirmPassword) {
@@ -19,7 +19,9 @@ const register = (req, res, next) => {
          // Generate a new ID
         
         username,
-        password
+        password,
+        fullname,
+        email
     };
     UserModel.push(newUser);
 
