@@ -1,68 +1,74 @@
-import React, { useState, useEffect } from "react";
-import "../css/NotificationPanel.css";
+import React, { useEffect, useState } from 'react';
+import '../css/NotificationPanel.css';
 
-const NotificationPanel = () => {
-  const [notifications, setNotifications] = useState(null);
+const NotificationPanel = ({ userId }) => {  // Assume userId is passed as a prop
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    fetch("/notifications.json")
-      .then((response) => response.json())
-      .then((data) => setNotifications(data))
-      .catch((error) => console.error("Error loading notifications:", error));
-  }, []);
-  {
-    /* This is where database input */
-  }
+    const interval = setInterval(() => {
+      fetch(`/api/notifications?userId=${userId}`)
+        .then(response => response.json())
+        .then(data => setNotifications(data));
+    }, 2000); // Poll every 2 seconds
 
-  if (!notifications) {
-    return <div>Loading...</div>;
-  }
+    return () => clearInterval(interval);
+  }, [userId]);  // Ensure the effect reruns if userId changes
 
-  const { friendRequest, newest } = notifications;
+  const handleNotificationClick = (notification) => {
+    // Mark the notification as read
+    fetch(`/api/notifications/${notification._id}/read`, {
+      method: 'PUT',
+    }).then(() => {
+      switch (notification.notiType) {
+        case 'friendRequest':
+          window.location.href = `/profile/${notification.targetUserId}`;
+          break;
+        case 'friendAccepted':
+          window.location.href = `/profile/${notification.targetUserId}`;
+          break;
+        case 'friendRejected':
+          alert('Your friend request was rejected.');
+          break;
+        case 'groupRequest':
+          window.location.href = `/group/${notification.groupId}`;
+          break;
+        case 'groupRejected':
+          alert('Your group join request was rejected.');
+          break;
+        case 'comment':
+          window.location.href = `/post/${notification.postId}`;
+          break;
+        case 'reaction':
+          window.location.href = `/post/${notification.postId}`;
+          break;
+        default:
+          break;
+      }
+    });
+
+  };
 
   return (
     <div className="notification-panel">
-      <h2 className="notification-title">Notification</h2>{" "}
-      {/* This should display the title */}
-      <div className="notification-section">
-        <h3>Friend Request</h3> {/* This should display "Friend Request" */}
-        <div className="friend-request">
-          <img
-            src={friendRequest.avatar}
-            alt={friendRequest.user}
-            className="avatar"
-          />
-          <div className="friend-request-content">
-            <strong>{friendRequest.user}</strong> {friendRequest.message}
-            <div className="request-info">
-              <span>{friendRequest.time}</span>
-              <span>{friendRequest.mutualFriends} mutual friends</span>
+      <h2 className="notification-title">Notifications</h2>
+      <ul>
+        {notifications.map((notif, index) => (
+          <li
+            key={index}
+            onClick={() => handleNotificationClick(notif)}
+            className={`newest-notification ${notif.isRead ? 'notification-read' : 'notification-unread'} ${notif.notiType}`}
+          >                        <div className="notification-content">
+              {notif.notiType === 'friendRequest' && 'New Friend Request'}
+              {notif.notiType === 'friendAccepted' && 'Friend Request Accepted'}
+              {notif.notiType === 'friendRejected' && 'Friend Request Rejected'}
+              {notif.notiType === 'groupRequest' && 'New Group Request'}
+              {notif.notiType === 'groupRejected' && 'Group Request Rejected'}
+              {notif.notiType === 'comment' && 'New Comment on Your Post'}
+              {notif.notiType === 'reaction' && 'New Reaction on Your Post'}
             </div>
-            <div className="request-actions">
-              <button className="accept-button">Accept</button>
-              <button className="reject-button">Reject</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="notification-section">
-        <h3>Newest</h3> {/* This should display "Newest" */}
-        {newest.map((notification) => (
-          <div key={notification.id} className="newest-notification">
-            <img
-              src={notification.avatar}
-              alt={notification.user}
-              className="avatar"
-            />
-            <div className="notification-content">
-              <strong>{notification.user}</strong> {notification.message}
-              {notification.comment && (
-                <span className="comment">{notification.comment}</span>
-              )}
-            </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 };
