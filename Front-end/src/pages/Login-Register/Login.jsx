@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../Authentication_Context/Auth_Provider";
 import "../../css/Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+
+  const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const { setUser,login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -14,25 +17,28 @@ const Login = () => {
   
     try {
       // Get reqsponse from back-end server
-      const response = await fetch('http://localhost:3000/users/login', {
+      const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ userName, password }),
       });
 
       // Checking server response
       if (response.ok) {
         const data = await response.json(); 
-        alert(data.message); 
+        
+        alert(data.msg); 
+        setUser(data.user);
+        login();
         navigate('/'); // Redirect to homepage 
       } else {
         const errorData = await response.json();
         alert(errorData.message);
       }
     } catch (err) {
-      console.error('Error:', error);
+      console.error('Error:', err);
       alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
     }
   };
@@ -44,11 +50,11 @@ const Login = () => {
           <h2>Sign In</h2>
           <form onSubmit={handleLogin}>
             <div>
-              <label htmlFor="username">Username</label>
+              <label htmlFor="UserName">UserName</label>
               <input
                 type="text"
-                id="username"
-                value={username}
+                id="userName"
+                value={userName}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>

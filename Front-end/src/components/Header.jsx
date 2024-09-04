@@ -3,8 +3,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLink, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { NavLink } from "react-router-dom";
 import HeaderNoti from "./HeaderNoti";
+import { useAuth } from "../Authentication_Context/Auth_Provider";
 
 function Header() {
+  const {user } = useAuth();
+  if (user && user.userName) {
+    console.log('Logged in user:', user.userName);
+  } else {
+    console.log('No user logged in');
+  }
   return (
     <>
       <header className="bg-header">
@@ -64,18 +71,19 @@ function Header() {
                           Group
                         </NavLink>
                       </li>
-                      <li className="nav-item">
+                      <li className="nav-item last-nav">
                         <HeaderNoti />
                       </li>
                     </ul>
                   </div>
                   <div className="col-3">
+                    <h3 className="userName">Wellcome: {user.userName}</h3>
                     <NavLink to="/login">
                     <button
-                      className="btn btn-sign-out align-items-center"
+                      className="btn btn-sign-out"
                       type="button"
                     >
-                      Sign In
+                      Sign out
                     </button>
                     </NavLink>
                   </div>

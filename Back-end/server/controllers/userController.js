@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel.js');
+const bcrypt = require('bcrypt');
 const { matchedData, validationResult } = require('express-validator');
 
 const getAllUsers = async (req, res) => {
@@ -19,13 +20,30 @@ const getOneUser =  async(req, res) => {
     res.send(findUser);
 };
 
-const createNewUser = async(req, res) => {
+const createNewUser = async (req, res) => {
+    // Validate the request
     const result = validationResult(req);
-    if (!result.isEmpty()) return res.status(400).send({ errors: result.array() });
+    if (!result.isEmpty()) {
+        return res.status(400).send({ errors: result.array() });
+    }
+    // Extract the valid data from the request
     const data = matchedData(req);
-    const newUser = new userModel(data);
-    const savedUser = await newUser.save();
-    res.status(201).send(savedUser);
+    try {
+        // Hash the password before saving the user
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+        data.password = hashedPassword;
+
+        // Create and save the new user
+        const newUser = new userModel(data);
+        const savedUser = await newUser.save();
+
+        // Return the saved user
+        res.status(201).send(savedUser);
+    } catch (error) {
+        console.error("Error creating user:", error);
+        res.status(500).send({ msg: "Internal Server Error" });
+    }
 };
 
 const editUser = async(req, res) => {
