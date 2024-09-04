@@ -1,11 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Post from "../../components/Post.jsx";
 import "../../css/Profile.css";
 import testImage from "../../image/Screenshot 2024-08-12 000128.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 
-function Profile() {
+const Profile = () => {
+  /*
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+
+  const userId = 'test-user-id';
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch(`/api/profile/${userId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile data');
+        }
+        const data = await response.json();
+        setProfileData(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
+  
+  if (loading) {
+    return <p>Loading profile...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading profile: {error}</p>;
+  }
+
+  if (!profileData) {
+    return <p>No profile data found</p>;
+  }
+    */
+
   const posts = [
     {
       id: 1,
