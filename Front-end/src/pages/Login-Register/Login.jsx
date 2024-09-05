@@ -35,10 +35,11 @@ const Login = () => {
         navigate('/'); // Redirect to homepage 
       } else {
         const errorData = await response.json();
-        alert(errorData.message);
+        console.error('User input Error: ', errorData);
+        alert("Incorrect Username or Password, please try again."); //Invalid credentials
       }
     } catch (err) {
-      console.error('Error:', err);
+      console.error('Internal Error:', err);
       alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
     }
   };
