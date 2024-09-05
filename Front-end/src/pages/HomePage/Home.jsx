@@ -6,6 +6,7 @@ import testImage from "../../image/Screenshot 2024-08-12 000128.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
+import React, { useState, useEffect } from 'react';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
