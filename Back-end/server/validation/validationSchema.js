@@ -14,13 +14,6 @@ const createUserValidationSchema = {
         }
     }
 };
-const createGroupValidationSchema = {
-    groupName : {
-        notEmpty : {
-            errorMessage : "Username cannot be empty",
-        },
-    },
-};
 const createPostValidationSchema = {
     content : {
         notEmpty : {
@@ -42,4 +35,4 @@ const createCommentValidationSchema = {
         },
     },
 };
-module.exports ={createUserValidationSchema,createGroupValidationSchema,createPostValidationSchema,createNotificationValidationSchema,createCommentValidationSchema };
+module.exports ={createUserValidationSchema,createPostValidationSchema,createNotificationValidationSchema,createCommentValidationSchema };
