@@ -1,24 +1,12 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGear,
-  faThumbsUp,
-  faShare,
-  faComment,
-} from "@fortawesome/free-solid-svg-icons";
+import {faGear,faThumbsUp,faShare,faComment,} from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 import "../css/post.css";
 import Reaction from "./Reaction.jsx";
 import CommentBox from "./CommentBox.jsx";
-
-function Post({
-  avatar,
-  userName,
-  content,
-  logo,
-  image,
-  numberOfReaction,
-  numberOfComment,
-}) {
+function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComment}) {
+  const {icon,color,text} = useSelector(state=> state.reaction)
   const [showReactions, setShowReactions] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const closeComments = () => {
@@ -74,10 +62,10 @@ function Post({
         <div className="row reaction justify-content-between">
           <div className="col-4 d-flex justify-content-start position-relative"
             onClick={() => setShowReactions(true)}>
-            <button>
-              <FontAwesomeIcon icon={faThumbsUp} /> Likes
-            </button>
-            <Reaction showReactions={showReactions} />
+          <button style={{ color: color }}>
+              <FontAwesomeIcon icon={icon} /> {text}
+          </button>
+          <Reaction showReactions={showReactions} setShowReactions={setShowReactions} />
           </div>
           <div
             className="col-4 d-flex justify-content-center"

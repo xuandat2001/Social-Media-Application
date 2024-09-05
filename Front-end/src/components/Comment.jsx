@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Reaction from "./Reaction";
-
+import { useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../css/componentItem.css";
 function CommentItem({ imageUser, userName, content, numberOfReact = 1 }) {
   const [showReactions, setShowReactions] = useState(false);
+  const {icon,color,text} = useSelector(state=> state.reaction)
   return (
     <>
       <div className="comment-list">
@@ -17,13 +19,11 @@ function CommentItem({ imageUser, userName, content, numberOfReact = 1 }) {
             <div className="comment-detail">
               <span className="time">1p</span>
               <button
-                onMouseEnter={() => setShowReactions(true)}
-                onMouseLeave={() => setShowReactions(false)}
-              >
-                Like ({numberOfReact})
+                onClick={() => setShowReactions(true)} style={{ color: color }}>
+                <FontAwesomeIcon icon={icon} /> {text} ({numberOfReact})
               </button>
 
-              <Reaction showReactions={showReactions} />
+              <Reaction showReactions={showReactions} setShowReactions={setShowReactions} />
             </div>
           </div>
         </div>
