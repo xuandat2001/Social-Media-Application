@@ -7,39 +7,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
 
-function Home() {
-  const posts = [
-    {
-      id: 1,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    {
-      id: 2,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    {
-      id: 3,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-  ];
+const Home = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/posts');
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error('Error fetching posts', error);
+      }
+
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
     <>
       <div className="container-fluid">
@@ -51,7 +36,7 @@ function Home() {
 
             {posts.map((post) => (
               <Post
-                key={post.id}
+                key={post._id}
                 avatar={post.avatar}
                 userName={post.userName}
                 content={post.content}
