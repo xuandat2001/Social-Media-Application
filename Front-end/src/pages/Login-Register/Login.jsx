@@ -8,7 +8,7 @@ const Login = () => {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
-  const { setUser,login } = useAuth();
+  const { setUser} = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -23,6 +23,7 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userName, password }),
+        credentials: 'include', // Include cookies for session management
       });
 
       // Checking server response
@@ -30,8 +31,9 @@ const Login = () => {
         const data = await response.json(); 
         
         alert(data.msg); 
-        setUser(data.user);
-        login();
+        console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
+        setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName });
+        console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName }));
         navigate('/'); // Redirect to homepage 
       } else {
         const errorData = await response.json();

@@ -6,6 +6,11 @@ import HeaderNoti from "./HeaderNoti";
 import { useAuth } from "../Authentication_Context/Auth_Provider";
 
 function Header() {
+  const { setUser} = useAuth();
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user'); // Clear the saved user on logout
+  };
   const {user } = useAuth();
   if (user && user.userName) {
     console.log('Logged in user:', user.userName);
@@ -82,7 +87,7 @@ function Header() {
                     <button
                       className="btn btn-sign-out"
                       type="button"
-                    >
+                    onClick={handleLogout}>
                       Sign out
                     </button>
                     </NavLink>

@@ -13,10 +13,9 @@ import Register from './pages/Login-Register/Register';
 const App = () => {
   const location = useLocation();
   const hideHeader = location.pathname === '/login' || location.pathname === '/register';
-
   return (
-    <AuthProvider>
-      {!hideHeader && <ProtectedRoute element={<Header />}/>}
+    <>
+      {!hideHeader && <ProtectedRoute element={<Header />} />}
       <Routes>
         <Route path="/" element={<ProtectedRoute element={<Home />} />} />
         <Route path="/groupList" element={<ProtectedRoute element={<GroupList />} />} />
@@ -26,7 +25,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
-    </AuthProvider>
+    </>
   );
 };
 

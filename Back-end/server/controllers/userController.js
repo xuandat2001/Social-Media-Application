@@ -54,7 +54,7 @@ const editUser = async(req, res) => {
 };
 const  deleteUser = async (req, res) => {
     const { findUser } = req;
-    await findUser.remove(); 
+    await findUser.deleteOne(); 
     return res.sendStatus(200);
 };
 
