@@ -1,23 +1,29 @@
 const mongoose = require('mongoose');
+const User = require('./userModel');
+const Post = require('./postModel');
+const Groups = require('./groupModel');
 
-// Define the profile schema
 const profileSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User',
+    ref: User,
   },
   bio: String,
-//   profileImage: String,
+//   profileImage: String, // image assets may require linking later
   posts: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post',
+    ref: Post,
   }],
   friends: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: User,  //replace with friendships from friendshipModel.js once friends db has been setup
+  }],
+  groups: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Groups,
   }],
 }, { timestamps: true });
 
-const Profile = mongoose.model.profile || mongoose.model('Profile', profileSchema);
+const Profile = mongoose.models.profile || mongoose.model('Profile', profileSchema);
 module.exports = Profile;

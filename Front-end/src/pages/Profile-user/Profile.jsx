@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from "react";
-import Post from "../../components/Post.jsx";
-import "../../css/Profile.css";
-import testImage from "../../image/Screenshot 2024-08-12 000128.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+import Post from '../../components/Post';
 
-const Profile = () => {
-  /*
-  const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+const Profile = (/*{ profileId }*/) => {
+  const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
-  
-
-  const userId = 'test-user-id';
+  const [loading, setLoading] = useState(true);
+  const profileId = "66dac1e5f56f611fe4cd9a62"; //TEMP profile ID
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`/api/profile/${userId}`);
+        const response = await fetch(`http://localhost:3000/api/profile/${profileId}`);
+        const data = await response.json()
+
         if (!response.ok) {
           throw new Error('Failed to fetch profile data');
         }
-        const data = await response.json();
-        setProfileData(data);
+
+        
+        console.log('Fetched profile data:', data)
+        setProfile(data);
+        setLoading(false);
+        
       } catch (err) {
         setError(err.message);
-      } finally {
         setLoading(false);
-      }
+      } 
     };
 
     fetchProfile();
-  }, [userId]);
+  }, [profileId]);
   
   if (loading) {
     return <p>Loading profile...</p>;
@@ -41,43 +40,10 @@ const Profile = () => {
     return <p>Error loading profile: {error}</p>;
   }
 
-  if (!profileData) {
-    return <p>No profile data found</p>;
+  if (!profile) {
+    return <p>Profile not found</p>;
   }
-    */
-
-  const posts = [
-    {
-      id: 1,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    {
-      id: 2,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    {
-      id: 3,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-  ];
+    
   return (
     <div className="profile-container">
       <div className="main-content">
@@ -85,14 +51,14 @@ const Profile = () => {
           <div className="profile-info">
             <div className="profile-pic"></div> {/* profile picture */}
             <div className="profile-details">
-              <h1>Minh Nguyen</h1>
+              <h1>{profile.userId.userName}</h1>
               <p>1 Post | 20 friends</p>
               <p>smiling@gmail.com</p>
               <br />
               <p className="bio">
                 BIO
                 <br />
-                Be Individual, Be authentic
+                {profile.bio}
               </p>
               <div className="profile-actions">
                 <p>Edit</p> {/*will be linked later*/}
@@ -113,18 +79,22 @@ const Profile = () => {
           <hr />
         </div>
         <div className="profile-content">
-          {posts.map((post) => (
-            <Post
-              key={post.id}
-              avatar={post.avatar}
-              userName={post.userName}
-              content={post.content}
-              logo={post.logo}
-              image={post.image}
-              numberOfReaction={post.numberOfReaction}
-              numberOfComment={post.numberOfComment}
-            />
-          ))}
+          {profile.posts.length === 0 ? (
+            <p> No posts yet </p>
+          ) : (
+            profile.posts.map((post) => (
+              <Post
+                key={post._id}
+                // avatar={avatar || "#"}
+                userName={profile.userId.userName}
+                content={post.content}
+                // logo={logo || "#"}
+                // image={image || "#"}
+                numberOfReaction={post.numberOfReaction}
+                numberOfComment={post.numberOfComment}
+              />
+            ))
+          )}
         </div>
       </div>
       <div className="interaction-sidebar">
