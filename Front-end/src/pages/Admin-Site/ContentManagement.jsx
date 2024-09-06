@@ -1,7 +1,7 @@
 import AdminHeader from "../../components/AdminHeader";
 import Search from "../../components/Search";
 
-function GroupRequest() {
+const  ContentManagement = ()=> {
   const demoData = [
     {
       id: "1",
@@ -58,4 +58,4 @@ function GroupRequest() {
     </>
   );
 }
-export default GroupRequest;
+export default ContentManagement;

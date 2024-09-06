@@ -1,7 +1,7 @@
 import AdminHeader from "../../components/AdminHeader";
 import Search from "../../components/Search";
 
-function GroupRequest() {
+const GroupRequest =()=> {
   const demoData = [
     {
       id: "1",

@@ -32,7 +32,7 @@ const Login = () => {
         
         alert(data.msg); 
         console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
-        setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName });
+        setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName  });
         console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName }));
         navigate('/'); // Redirect to homepage 
       } else {

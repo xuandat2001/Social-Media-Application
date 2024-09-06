@@ -1,6 +1,6 @@
 import AdminHeader from "../../components/AdminHeader";
 import Search from "../../components/Search";
-function UserManagement() {
+const UserManagement = ()=> {
   const demoData = [
     {
       id: "1",
@@ -27,7 +27,6 @@ function UserManagement() {
   return (
     <>
       <AdminHeader />
-
       <div className="container">
         <Search />
         <table className="table">

@@ -20,44 +20,44 @@ function CreateGroupBox({ showCreateGroupBox, onClose }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            // Get reqsponse from back-end server
-            const responseCreateGroup = await fetch('http://localhost:3000/api/groups', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ groupName, groupType,selectedImage, user }),
-              credentials: 'include', // Include cookies for session management
-            });
-            const responseCreateMemberShip= await fetch('http://localhost:3000/api/groups', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ groupName, groupType,selectedImage, user }),
-                credentials: 'include', // Include cookies for session management
-              });
+        // try {
+        //     // Get reqsponse from back-end server
+        //     const responseCreateGroup = await fetch('http://localhost:3000/api/groups', {
+        //       method: 'POST',
+        //       headers: {
+        //         'Content-Type': 'application/json',
+        //       },
+        //       body: JSON.stringify({ groupName, groupType,selectedImage, user }),
+        //       credentials: 'include', // Include cookies for session management
+        //     });
+        //     const responseCreateMemberShip= await fetch('http://localhost:3000/api/groups', {
+        //         method: 'POST',
+        //         headers: {
+        //           'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ groupName, groupType,selectedImage, user }),
+        //         credentials: 'include', // Include cookies for session management
+        //       });
       
-            // Checking server response
-            if (responseCreateGroup.ok) {
-              const data = await response.json(); 
+        //     // Checking server response
+        //     if (responseCreateGroup.ok) {
+        //       const data = await response.json(); 
               
-              alert(data.msg); 
-              console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
-              const group = 
-              setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName });
-              console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName }));
-              navigate('/'); // Redirect to homepage 
-            } else {
-              const errorData = await response.json();
-              console.error('User input Error: ', errorData);
-              alert("Incorrect Username or Password, please try again."); //Invalid credentials
-            }
-          } catch (err) {
-            console.error('Internal Error:', err);
-            alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
-          }
+        //       alert(data.msg); 
+        //       console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
+        //       const group = 
+        //       setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName });
+        //       console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName }));
+        //       navigate('/'); // Redirect to homepage 
+        //     } else {
+        //       const errorData = await response.json();
+        //       console.error('User input Error: ', errorData);
+        //       alert("Incorrect Username or Password, please try again."); //Invalid credentials
+        //     }
+        //   } catch (err) {
+        //     console.error('Internal Error:', err);
+        //     alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
+        //   }
     };
 
     return (

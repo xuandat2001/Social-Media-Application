@@ -1,7 +1,16 @@
 import "../css/header.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import { NavLink, useNavigate } from "react-router-dom";
+
 function AdminHeader() {
+  const navigate = useNavigate(); // Use useNavigate hook
+
+  const handleLogout = () => {
+    // Perform any logout logic here, like clearing user data
+    navigate('/'); // Navigate to the home page
+  };
+
   return (
     <>
       <header className="bg-header">
@@ -25,23 +34,32 @@ function AdminHeader() {
                   <div className="col-9">
                     <ul className="nav nav-header">
                       <li className="nav-item">
-                        <a
-                          className="nav-link active"
-                          aria-current="page"
-                          href="#"
+                        <NavLink
+                          className="nav-link"
+                          to="/admin/groupRequest"
+                          end
+                          activeClassName="active"
                         >
                           Group Request
-                        </a>
+                        </NavLink>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <NavLink
+                          className="nav-link"
+                          to="/admin/userManagement"
+                          activeClassName="active"
+                        >
                           User Management
-                        </a>
+                        </NavLink>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <NavLink
+                          className="nav-link"
+                          to="/admin/contentManagement"
+                          activeClassName="active"
+                        >
                           Content Management
-                        </a>
+                        </NavLink>
                       </li>
                     </ul>
                   </div>
@@ -49,6 +67,7 @@ function AdminHeader() {
                     <button
                       className="btn btn-sign-out align-items-center"
                       type="button"
+                      onClick={handleLogout} // Call handleLogout directly
                     >
                       Sign Out
                     </button>
@@ -62,4 +81,5 @@ function AdminHeader() {
     </>
   );
 }
+
 export default AdminHeader;
