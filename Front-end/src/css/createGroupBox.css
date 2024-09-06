@@ -1,0 +1,23 @@
+.containerCreateGroupBox{
+    margin-top: 10px;
+    width: 500px !important;
+    border: 1px solid rgb(106, 106, 106);
+    border-radius: 20px;
+    padding: 15px;
+
+}
+.createGroupBoxHeader{
+
+    margin-bottom: 20px;
+}
+.admin-info{
+    margin-bottom: 20px;
+}
+.admin-info img{
+    width: 40px;
+    height: 40px;
+    
+}
+.admin-info h3{
+   display: inline-block;
+}

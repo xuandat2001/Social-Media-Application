@@ -11,7 +11,7 @@ const membershipSchema = new mongoose.Schema({
         ref: 'groups',
         required: true,
     },
-    status: String,
+    status: String,// pending , accepted, rejected 
     member_role: String,
 });
 
