@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const groupSchema = new mongoose.Schema({
     group_name: String,
     group_access_right: String,
-    user: {
+    user: { // admin
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
         required: true,
