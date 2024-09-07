@@ -14,13 +14,6 @@ const createUserValidationSchema = {
         }
     }
 };
-const createPostValidationSchema = {
-    content : {
-        notEmpty : {
-            errorMessage : "Content cannot be empty",
-        },
-    },
-};
 const createNotificationValidationSchema = {
     notiType : {
         notEmpty : {
@@ -35,4 +28,4 @@ const createCommentValidationSchema = {
         },
     },
 };
-module.exports ={createUserValidationSchema,createPostValidationSchema,createNotificationValidationSchema,createCommentValidationSchema };
+module.exports ={createUserValidationSchema,createNotificationValidationSchema,createCommentValidationSchema };

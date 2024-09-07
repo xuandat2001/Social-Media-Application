@@ -18,9 +18,7 @@ const getOnePost =  async(req, res) => {
     res.send(findPost);
 };
 const createNewPost = async(req, res) => {
-    const result = validationResult(req);
-    if (!result.isEmpty()) return res.status(400).send({ errors: result.array() });
-    const data = matchedData(req);
+    const data = req.body;
     const newPosts = new postModel(data);
     const savedPosts = await newPosts.save();
     res.status(201).send(savedPosts);

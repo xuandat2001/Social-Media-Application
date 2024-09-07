@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import '../../css/postBox.css';
 import dogImage from '../../image/white-dog-names-1-modified.png';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +11,53 @@ import { useAuth } from "../../Authentication_Context/Auth_Provider";
 function CreatePostBox({showCreatePostBox, closeCreatePostBox}){
     const {user} = useAuth();
     console.log(user);
+
+        // Add state for the form inputs
+    const [statement, setStatement] = useState('');
+    const [accessRight, setAccessRight] = useState('public');
+    const [numberOfReaction, setNumberOfReaction] = useState(0);
+    const [numberOfComment, setNumberOfComment] = useState(0);
+
+    // Function to handle post submission
+    const handleSubmit = async () => {
+        if (!statement.trim()) {
+          alert("Please write something to post.");
+          return;
+        }
+      
+        const postData = {
+          content: statement,            // Maps to "content" in the backend
+          post_access_right: accessRight, // Maps to "post_access_right"
+          user: user.id,                   // Use user ID for the reference
+          numberOfReaction: numberOfReaction,  
+          numberOfComment: numberOfComment             
+        };
+      
+        try {
+          const response = await fetch('http://localhost:3000/api/posts', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(postData),
+          });
+      
+          if (response.ok) {
+            // Handle successful post creation, clear the form and close the box
+            setStatement('');
+            setAccessRight('public');
+            setNumberOfReaction(0);
+            setNumberOfComment(0);
+            closeCreatePostBox();
+            console.log('Post created successfully');
+          } else {
+            console.error('Failed to create post');
+          }
+        } catch (error) {
+          console.error('Error submitting post:', error);
+        }
+      };
+
     return (
         <>
         {showCreatePostBox && (
@@ -30,7 +78,7 @@ function CreatePostBox({showCreatePostBox, closeCreatePostBox}){
                  </div>
                  <div className='col-6'>
                      <h2>{user.userName}</h2>
-                     <select id = "accessRight" name="accessRight">
+                     <select id = "accessRight" name="accessRight" value={accessRight} onChange={(e) => setAccessRight(e.target.value)}>
                          <option value="public">Public</option>
                          <option value="friend">Friend</option>
                          <option value="private">Private</option>
@@ -40,7 +88,7 @@ function CreatePostBox({showCreatePostBox, closeCreatePostBox}){
 
              <div className='row'>
                  <div className='text-area-div'>
-                     <textarea className='text-area' placeholder='What are you thinking?' id="statement" name='statement' cols="65" rows="2" ></textarea>
+                     <textarea className='text-area' placeholder='What are you thinking?' id="statement" name='statement' value={statement} onChange={(e) => setStatement(e.target.value)} cols="65" rows="2" ></textarea>
                  </div>
              </div>
              
@@ -52,7 +100,7 @@ function CreatePostBox({showCreatePostBox, closeCreatePostBox}){
                          <a className="icon-color" href="#"><FontAwesomeIcon icon={faFaceSmile} /></a>
                          <a className="icon-color" href="#"><FontAwesomeIcon icon={faLocationDot} /></a>
                          <a className="icon-color" href="#"><FontAwesomeIcon icon={faEllipsis} /></a>
-                         <button type='button' className='custom-post-button'>Post</button>                
+                         <button type='button' className='custom-post-button' onClick={handleSubmit}>Post</button>                
                      </nav>
                  </div>
 
