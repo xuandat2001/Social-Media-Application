@@ -52,6 +52,7 @@ app.post('/login', async (req, res) => {
           id: findUser._id,
           userName: findUser.userName,
           fullName: findUser.fullName,
+          userAvatar: findUser.userAvatar,
         },
       });
     });
