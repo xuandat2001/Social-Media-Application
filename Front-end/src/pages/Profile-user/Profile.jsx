@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Post from '../../components/Post';
-
+import { useAuth } from "../../Authentication_Context/Auth_Provider";
 
 const Profile = (/*{ profileId }*/) => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const profileId = "66dac1e5f56f611fe4cd9a62"; //TEMP profile ID
+  const {user} = useAuth();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/profile/${profileId}`);
+        const response = await fetch(`http://localhost:3000/api/profile/${user.id}`);
         const data = await response.json()
 
         if (!response.ok) {
@@ -30,7 +30,7 @@ const Profile = (/*{ profileId }*/) => {
     };
 
     fetchProfile();
-  }, [profileId]);
+  }, [user.id]);
   
   if (loading) {
     return <p>Loading profile...</p>;

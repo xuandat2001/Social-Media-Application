@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AdminHeader from '../../components/AdminHeader';
 
 const GroupRequest = () => {
   const [requests, setRequests] = useState([]);
@@ -46,6 +47,7 @@ const GroupRequest = () => {
 
   return (
     <>
+    <AdminHeader/>
       <div className="container">
         <table className="table">
           <thead>
