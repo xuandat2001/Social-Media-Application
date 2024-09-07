@@ -1,5 +1,6 @@
 import FriendSidebar from "../../components/FriendSidebar";
-import Header from "../../components/Header";
+import { formatDistanceToNow } from 'date-fns';
+
 import "../../css/Home.css";
 import Post from "../../components/Post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -45,10 +46,10 @@ const Home = () => {
             {posts.map((post) => (
               <Post
                 key={post._id}
-                avatar={post.avatar}
-                userName={post.userName}
+                avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
+                userName={post.user && post.user.userName ? post.user.userName : 'Anonymous'}
                 content={post.content}
-                logo={post.logo}
+                time={formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
                 image={`data:image/png;base64,${post.image_url}`}
                 numberOfReaction={post.numberOfReaction}
                 numberOfComment={post.numberOfComment}

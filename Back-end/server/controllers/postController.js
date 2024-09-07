@@ -3,13 +3,12 @@ const fs = require('fs');
 const { matchedData, validationResult } = require('express-validator');
 
 const getAllPosts = async (req, res) => {
-    const { query: { filter, value } } = req;
-        let query = {};
-        if (filter && value) {
-            query[filter] = { $regex: value, $options: 'i' }; //Case-insensitive search
-        }
-        const Posts = await postModel.find(query);
-        res.send(Posts);
+    try {
+        const posts = await postModel.find().populate('user', 'userName userAvatar');
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching posts' });
+    }
 };
 const getOnePost =  async(req, res) => {
     const { findPost } = req;

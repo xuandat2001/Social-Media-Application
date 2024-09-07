@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import "../css/post.css";
 import Reaction from "./Reaction.jsx";
 import CommentBox from "./CommentBox.jsx";
-function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComment}) {
+function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComment}) {
   const {icon,color,text} = useSelector(state=> state.reaction)
   const [showReactions, setShowReactions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -21,7 +21,7 @@ function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComme
             <div className="post-info">
               <h3>{userName}</h3>
               <p className="time-post">
-                <span className="authorization-icon">{logo}</span>1p
+                <span className="authorization-icon"></span>{time}
               </p>
             </div>
           </div>
