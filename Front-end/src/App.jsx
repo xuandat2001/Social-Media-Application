@@ -15,7 +15,7 @@ import AdminLogin from './pages/Login-Register/LoginAdmin';
 import UserManagement from './pages/Admin-Site/UserManagement';
 import GroupRequest from './pages/Admin-Site/GroupRequest';
 import ContentManagement from './pages/Admin-Site/ContentManagement';
-
+import Group from './pages/GroupPage/Group';
 
 const App = () => {
   const location = useLocation();
@@ -33,6 +33,8 @@ const App = () => {
             <Route path="/friendList" element={<ProtectedRoute element={<FriendList />} />} />
             <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
             <Route path="/strangerprofile" element={<ProtectedRoute element={<StrangerProfile />} />} />
+            <Route path="/ " element={<ProtectedRoute element={<StrangerProfile />} />} />
+            <Route path="/groupDetail/:groupId" element={<ProtectedRoute element={<Group />} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 

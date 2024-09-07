@@ -64,7 +64,7 @@ function GroupList() {  // Assuming you pass userId as a prop
                                         <h3>Admin of Groups</h3>
                                         {groups.adminGroups.map((group) => (
                                             <div className="col-6" key={group._id}>
-                                                <GroupBox
+                                                <GroupBox groupId={group._id}
                                                     // Display base64 image
                                                     avatar={`data:image/png;base64,${group.groupPicture}`}  
                                                     nameGroup={group.group_name}
