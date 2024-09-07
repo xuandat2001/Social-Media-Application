@@ -2,7 +2,6 @@ import FriendSidebar from "../../components/FriendSidebar";
 import Header from "../../components/Header";
 import "../../css/Home.css";
 import Post from "../../components/Post";
-import testImage from "../../image/Screenshot 2024-08-12 000128.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";

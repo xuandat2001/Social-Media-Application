@@ -1,7 +1,7 @@
 const memberShipModel = require('../models/membershipModel.js')
 const userModel = require('../models/userModel.js');
 const fs = require('fs');
-const multer = require('multer');
+
 const getAllGroupCreationRequest = async (req, res) => {
     try {
         const pendingRequests = await memberShipModel.find({ status: 'pending', member_role:'admin',isApproved: false });
