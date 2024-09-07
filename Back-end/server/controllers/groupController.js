@@ -1,16 +1,29 @@
 const groupModel = require('../models/groupModel.js'); 
 const userModel = require('../models/userModel.js');
+const membershipModel = require('../models/membershipModel.js'); 
 const { matchedData, validationResult } = require('express-validator');
 
-const getAllGroups = async (req, res) => {
-    const { query: { filter, value } } = req;
-        let query = {};
-        if (filter && value) {
-            query[filter] = { $regex: value, $options: 'i' }; //Case-insensitive search
-        }
-        const groups = await groupModel.find(query);
-        res.send(groups);
-};
+const getUserGroups = async (req, res) => {
+    try {
+      const userId = req.params.userId;
+  
+      // Find groups where the user is the admin
+      const adminGroups = await groupModel.find({ user: userId });
+  
+      // Find groups where the user is a member (and isApproved)
+      const memberGroups = await membershipModel.find({ user_id: userId, isApproved: true }).populate('group_name');
+  
+      // Combine the groups from both queries
+      const allGroups = {
+        adminGroups: adminGroups,
+        memberGroups: memberGroups
+      };
+  
+      res.status(200).json(allGroups);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching user groups', error });
+    }
+  };
 const getOneGroup =  async(req, res) => {
     const { findGroup } = req;
     if (!findGroup) {
@@ -18,32 +31,49 @@ const getOneGroup =  async(req, res) => {
     }
     res.send(findGroup);
 };
-const createNewGroup = async(req, res) => {
-    const data = req.body;
-    // Ensure the user ID is present in the body
-    console.log('Request body:', req.body);
-    if (!data.user) {
-        return res.status(400).send({ error: "User ID is required." });
-    }
+const createNewGroup = async (req, res) => {
     try {
-        // Check if the user exists
-        const existingUser = await userModel.findById(data.user);
-        if (!existingUser) {
-            return res.status(404).send({ error: "User does not exist." });
+        // Find the membership request by ID
+        const request = await membershipModel.findById(req.params.id);
+
+        // If the request is not found, return a 404 error
+        if (!request) {
+            return res.status(404).json({ error: 'Request not found' });
         }
-        // Create a new group instance
-        const newGroup = new groupModel(data);
-        
+
+        // If the request has already been approved, return a 400 error
+        if (request.status === 'accepted') {
+            return res.status(400).json({ error: 'Request already approved' });
+        }
+
+        // Create the group using the Group model
+        const newGroup = new groupModel({
+            group_name: request.group_name,
+            group_access_right: request.group_access_right,
+            groupPicture: request.groupPicture,
+            user: request.user_id,  // The user who requested the group will be the admin
+        });
+
         // Save the new group to the database
         const savedGroup = await newGroup.save();
-        
-        // Respond with the created group
-        res.status(201).send(savedGroup);
+
+        // Update the membership request to reflect the approval
+        request.status = 'accepted';
+        request.isApproved = true;
+
+        // Save the updated request
+        await request.save();
+
+        // Respond with a success message and the created group
+        res.status(200).json({ message: 'Group created successfully', group: savedGroup });
     } catch (error) {
-        console.error('Error creating group:', error);
-        res.status(500).send({ error: "An error occurred while creating the group." });
+        console.error('Error approving group request:', error);
+        res.status(500).json({ error: 'Error approving group request' });
     }
 };
+
+
+
 const editGroup = async(req, res) => {
     const { body, findGroup } = req;
     Object.assign(findGroup, body);
@@ -56,4 +86,4 @@ const  deleteGroup = async (req, res) => {
     return res.sendStatus(200);
 };
 
-module.exports = {getAllGroups,getOneGroup,createNewGroup,editGroup,deleteGroup};
+module.exports = {getUserGroups,getOneGroup,createNewGroup,editGroup,deleteGroup};

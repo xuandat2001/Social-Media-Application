@@ -6,13 +6,32 @@ const membershipSchema = new mongoose.Schema({
         ref: 'users',
         required: true,
     },
-    group_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'groups',
+    group_name: {
+        type: String,
         required: true,
     },
-    status: String,// pending , accepted, rejected 
-    member_role: String,
+    group_access_right: {
+        type: String,
+        required: true,
+    },
+    groupPicture: {
+        type: String,  // Store image as Base64 string
+        required: false,  // Optional field for the image
+    },
+    status: {
+        type: String,
+        default: 'pending',
+    },
+    member_role: {
+        type: String,
+        default: 'admin',
+    },
+    isApproved: {
+        type: Boolean,
+        default: false,
+    },
+}, {
+    timestamps: true,  // Automatically create createdAt and updatedAt fields
 });
 
 const Membership = mongoose.models.Membership || mongoose.model('memberships', membershipSchema);

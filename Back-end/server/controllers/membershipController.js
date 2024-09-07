@@ -1,14 +1,14 @@
 const memberShipModel = require('../models/membershipModel.js')
 const userModel = require('../models/userModel.js');
-
-const getAllMemberShips = async (req, res) => {
-    const { query: { filter, value } } = req;
-        let query = {};
-        if (filter && value) {
-            query[filter] = { $regex: value, $options: 'i' }; //Case-insensitive search
-        }
-        const groups = await memberShipModel.find(query);
-        res.send(groups);
+const fs = require('fs');
+const multer = require('multer');
+const getAllGroupCreationRequest = async (req, res) => {
+    try {
+        const pendingRequests = await memberShipModel.find({ status: 'pending', member_role:'admin',isApproved: false });
+        res.status(200).json(pendingRequests);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch group requests' });
+      }
 };
 const getOneMemberShip =  async(req, res) => {
     const { findMemberShip } = req;
@@ -17,36 +17,69 @@ const getOneMemberShip =  async(req, res) => {
     }
     res.send(findMemberShip);
 };
-const createNewMemberShip = async(req, res) => {
-    const data = req.body;
-    // Ensure the user ID is present in the body
-    console.log('Request body:', req.body);
-    if (!data.user) {
-        return res.status(400).send({ error: "User ID is required." });
-    }
+
+const rejectGroupCreationRequest = async(req, res) => {
+    const { id } = req.params;
+
     try {
-        // Check if the user exists
-        const existingUser = await userModel.findById(data.user);
-        if (!existingUser) {
-            return res.status(404).send({ error: "User does not exist." });
-        }
-        const existingGroup = await groupModel.findById(data.group);
-        if (!existingGroup) {
-            return res.status(404).send({ error: "Group does not exist." });
-        }
-        // Create a new group instance
-        const newMemberShip = new memberShipModel(data);
-        
-        // Save the new group to the database
-        const savedMemberShip = await newMemberShip.save();
-        
-        // Respond with the created group
-        res.status(201).send(savedMemberShip);
+      // Find the request by ID and update its status to rejected
+      const updatedRequest = await memberShipModel.findByIdAndUpdate(
+        id,
+        { status: 'rejected', isApproved: true }, // Set status to 'rejected' and isApproved to true
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedRequest) {
+        return res.status(404).json({ error: 'Request not found' });
+      }
+  
+      res.status(200).json({ message: 'Group request rejected', request: updatedRequest });
     } catch (error) {
-        console.error('Error creating group:', error);
-        res.status(500).send({ error: "An error occurred while creating the group." });
+      console.error('Error rejecting request:', error);
+      res.status(500).json({ error: 'Failed to reject the group request' });
     }
 };
+
+
+const createNewMemberShip = async (req, res) => {
+    const { group_name, group_access_right, user_id } = req.body;
+    let groupPicture = null;
+
+    if (req.file) {
+        // Read the image file from the temporary location
+        groupPicture = fs.readFileSync(req.file.path, { encoding: 'base64' }); // Convert image file to Base64
+
+        // Remove the file from the temporary folder
+        fs.unlink(req.file.path, (err) => {
+            if (err) console.error('Error deleting temporary file:', err);
+        });
+    }
+
+    try {
+        // Create a new membership request with the image stored as Base64
+        const newRequest = new memberShipModel({
+            group_name,
+            group_access_right,
+            groupPicture,  // Store Base64-encoded image here
+            user_id,
+            status: 'pending',
+            member_role: 'admin',
+        });
+
+        // Save the new group request
+        const savedRequest = await newRequest.save();
+        res.status(201).json({ message: 'Group creation request submitted', request: savedRequest });
+    } catch (error) {
+        res.status(500).json({ error: 'Error submitting group creation request' });
+    }
+};
+
+
+
+
+
+
+
 const editMemberShip = async(req, res) => {
     const { body, findMemberShip } = req;
     Object.assign(findMemberShip, body);
@@ -59,4 +92,4 @@ const  deleteMemberShip = async (req, res) => {
     return res.sendStatus(200);
 };
 
-module.exports = {getAllMemberShips,getOneMemberShip,createNewMemberShip,editMemberShip,deleteMemberShip};
+module.exports = {getAllGroupCreationRequest,getOneMemberShip,createNewMemberShip,editMemberShip,deleteMemberShip,rejectGroupCreationRequest};

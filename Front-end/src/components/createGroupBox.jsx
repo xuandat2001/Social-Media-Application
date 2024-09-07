@@ -9,56 +9,48 @@ function CreateGroupBox({ showCreateGroupBox, onClose }) {
     const [groupName, setGroupName] = useState('');
     const [groupType, setGroupType] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
-    const { user } = useAuth();
+    const { user } = useAuth();  // User is the person creating the request
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedImage(URL.createObjectURL(file));
+            setSelectedImage(file);  // Store the file object instead of the URL
         }
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // try {
-        //     // Get reqsponse from back-end server
-        //     const responseCreateGroup = await fetch('http://localhost:3000/api/groups', {
-        //       method: 'POST',
-        //       headers: {
-        //         'Content-Type': 'application/json',
-        //       },
-        //       body: JSON.stringify({ groupName, groupType,selectedImage, user }),
-        //       credentials: 'include', // Include cookies for session management
-        //     });
-        //     const responseCreateMemberShip= await fetch('http://localhost:3000/api/groups', {
-        //         method: 'POST',
-        //         headers: {
-        //           'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify({ groupName, groupType,selectedImage, user }),
-        //         credentials: 'include', // Include cookies for session management
-        //       });
-      
-        //     // Checking server response
-        //     if (responseCreateGroup.ok) {
-        //       const data = await response.json(); 
-              
-        //       alert(data.msg); 
-        //       console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
-        //       const group = 
-        //       setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName });
-        //       console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName }));
-        //       navigate('/'); // Redirect to homepage 
-        //     } else {
-        //       const errorData = await response.json();
-        //       console.error('User input Error: ', errorData);
-        //       alert("Incorrect Username or Password, please try again."); //Invalid credentials
-        //     }
-        //   } catch (err) {
-        //     console.error('Internal Error:', err);
-        //     alert("Unable to connect to the server. Please check your network connection."); // Catching server-related errors
-        //   }
+        const formData = new FormData();
+        formData.append('group_name', groupName);
+        formData.append('group_access_right', groupType);
+        formData.append('user_id', user.id);
+        
+        if (selectedImage) {
+            formData.append('groupPicture', selectedImage);  // Append the actual image file
+        }
+        
+        try {
+            console.log([...formData]);  // Log the entries of the FormData for debugging
+            const response = await fetch('http://localhost:3000/api/group-requests', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                alert('Group creation request sent successfully!');
+            } else {
+                const errorData = await response.json();
+                console.error('Error:', errorData);
+                alert('Failed to send group request.');
+            }
+        } catch (err) {
+            console.error('Error:', err);
+            alert('Network error.');
+        }
     };
+    
 
     return (
         <>
@@ -67,7 +59,7 @@ function CreateGroupBox({ showCreateGroupBox, onClose }) {
                     <div className='createGroupBoxHeader'>
                         <div className='row'>
                             <div className='col-11'>
-                                <h2>Create Group</h2>
+                                <h2>Request to Create Group</h2>
                             </div>
                             <div className='col-1'>
                                 <button onClick={onClose}>
@@ -79,7 +71,7 @@ function CreateGroupBox({ showCreateGroupBox, onClose }) {
 
                     <div className='admin-info'>
                         <img src={Kaido} className='avatar' alt="avatar user" />
-                        <h3>{user.name} (admin)</h3>
+                        <h3>{user.name} (Requestor)</h3>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -131,7 +123,7 @@ function CreateGroupBox({ showCreateGroupBox, onClose }) {
                         </div>
 
                         {/* Submit Button */}
-                        <button type="submit" className="btn btn-primary">Create Group</button>
+                        <button type="submit" className="btn btn-primary">Send Group Request</button>
                     </form>
                 </div>
             )}
