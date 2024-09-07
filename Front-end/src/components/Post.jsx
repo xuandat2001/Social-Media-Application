@@ -16,7 +16,7 @@ function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComme
     <>
       <div className="container container-post">
         <div className="row">
-          <div className="col-11 d-flex align-items-center">
+          <div style={ { backgroundColor: '#FED7FF', borderTopLeftRadius: '10px' } } className="col-11 d-flex align-items-center">
             <img className="avatar me-3" src={avatar} alt="User avatar" />
             <div className="post-info">
               <h3>{userName}</h3>
@@ -25,7 +25,7 @@ function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComme
               </p>
             </div>
           </div>
-          <div className="col-1">
+          <div style={ { backgroundColor: '#FED7FF', borderTopRightRadius: '10px'} } className="col-1">
             <button className="btn float-end">
               <FontAwesomeIcon icon={faGear} />
             </button>
