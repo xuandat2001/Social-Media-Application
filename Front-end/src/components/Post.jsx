@@ -25,11 +25,15 @@ function Post({avatar,userName,content,logo,image,numberOfReaction,numberOfComme
               </p>
             </div>
           </div>
-          <div style={ { backgroundColor: '#FED7FF', borderTopRightRadius: '10px'} } className="col-1">
+          <div style={{ backgroundColor: '#FED7FF', borderTopRightRadius: '10px' }} className="col-1">
             <button className="btn float-end">
               <FontAwesomeIcon icon={faGear} />
             </button>
+            <button className="btn btn-outline-danger float-end" style={{ marginTop: '10px', marginBottom: '20px' }}>
+              Report
+            </button>
           </div>
+
         </div>
         <div className="row">
           <div className="post-content">
