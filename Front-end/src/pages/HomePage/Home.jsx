@@ -49,7 +49,7 @@ const Home = () => {
                 userName={post.userName}
                 content={post.content}
                 logo={post.logo}
-                image={`data:image/png;base64,${post.mage_url}`}
+                image={`data:image/png;base64,${post.image_url}`}
                 numberOfReaction={post.numberOfReaction}
                 numberOfComment={post.numberOfComment}
               />
