@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
 import React, { useState, useEffect } from 'react';
+import CreatePostBox from "../../components/User-Site/CreatePostBox";
 
 const Home = () => {
+  const [showCreatePostBox, setShowCreatePostBox] = useState(false);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -23,15 +25,24 @@ const Home = () => {
     };
     fetchPosts();
   }, []);
+  const onClick = () =>{
+    setShowCreatePostBox(true);
+  }
+
+  const closeCreatePostBox = () => {
+      setShowCreatePostBox(false);
+  }
   return (
     <>
       <div className="container-fluid">
         <div className="row">
           <div className="col-8  posts">
             <div className="create-post">
-              <CreatePost />
+                <CreatePost showCreatePostBox={onClick} />
             </div>
-
+                {showCreatePostBox && (
+                  <CreatePostBox showCreatePostBox={showCreatePostBox} closeCreatePostBox={closeCreatePostBox} />
+                                )}
             {posts.map((post) => (
               <Post
                 key={post._id}

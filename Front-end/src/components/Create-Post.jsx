@@ -5,7 +5,7 @@ import story from "../image/Screenshot 2024-08-19 230245.png";
 import testImage from "../image/Screenshot 2024-08-12 000128.png";
 import "../css/createPostForm.css";
 
-const CreatePost = () => {
+const CreatePost = ({showCreatePostBox}) => {
   const user = {
     avatar: testImage,
     userName: "Smiling",
@@ -22,22 +22,29 @@ const CreatePost = () => {
         <input
           type="text"
           className="form-control"
+          onClick={showCreatePostBox}
           placeholder="Create a new Post"
           style={{ borderRadius: "50px" }}
         />
       </div>
       <div className="card-footer d-flex justify-content-around">
         <div className="text-center icon">
-          <img src={image} alt="logo" />
-          <span className="ms-2">Image</span>
+          <button style={{ backgroundColor: "transparent", border: "none" }} onClick={showCreatePostBox}>
+            <img src={image} alt="logo" />
+            <span className="ms-2" >Image</span>
+          </button> 
         </div>
         <div className="text-center icon">
-          <img src={video} alt="logo" />
-          <span className="ms-2">Video</span>
+          <button style={{ backgroundColor: "transparent", border: "none" }} onClick={showCreatePostBox}>
+            <img src={video} alt="logo" />
+            <span className="ms-2">Video</span>
+          </button>
         </div>
         <div className="text-center icon">
-          <img src={story} alt="logo" />
-          <span className="ms-2">Story</span>
+          <button style={{ backgroundColor: "transparent", border: "none" }} onClick={showCreatePostBox}>
+            <img src={story} alt="logo" />
+            <span className="ms-2">Story</span>
+          </button>
         </div>
       </div>
     </div>
