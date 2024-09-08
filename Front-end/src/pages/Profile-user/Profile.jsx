@@ -10,30 +10,19 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if user exists and user.id is available
+    if (!user || !user.id) {
+      console.log('Waiting for user object to populate...');
+      return; // Wait until user object is fully populated
+    }
+
+    // Extract userId from user object
+    const userId = user.id;
+
     const fetchProfile = async () => {
-      if (!user) {
-        setError('No user is logged in');
-        setLoading(false);
-        return;
-      }
-
       try {
-        // First, fetch the profile ID based on the user ID
-        const userProfileResponse = await fetch(`http://localhost:3000/api/profiles?userId=${user._id}`);
-        const userProfileData = await userProfileResponse.json();
-
-        if (!userProfileResponse.ok) {
-          throw new Error('Failed to fetch user profile data');
-        }
-
-        if (userProfileData.length === 0) {
-          throw new Error('No profile found for this user');
-        }
-
-        const profileId = userProfileData[0]._id; // Assuming the user has only one profile
-
-        // Now, fetch the profile details using the profile ID
-        const profileResponse = await fetch(`http://localhost:3000/api/profile/${profileId}`);
+        console.log(`Fetching profile for userId: ${userId}`); // Log userId to ensure it's correct
+        const profileResponse = await fetch(`http://localhost:3000/api/profile?userId=${userId}`);
         const profileData = await profileResponse.json();
 
         if (!profileResponse.ok) {
@@ -44,13 +33,14 @@ const Profile = () => {
         setLoading(false);
 
       } catch (err) {
-        setError(err.message);
+        console.error('Error fetching profile:', err.message); // Log error for debugging
+        setError('Failed to fetch profile data');
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [user]);
+  }, [user]); // Depend on the user object to ensure this runs when user is updated
 
   if (loading) {
     return <p>Loading profile...</p>;
@@ -82,7 +72,7 @@ const Profile = () => {
               </p>
               <div className="profile-actions">
                 <Link to="/editprofile">
-                <p>Edit</p> 
+                  <p>Edit</p> 
                 </Link>
               </div>
             </div>
@@ -102,7 +92,7 @@ const Profile = () => {
         </div>
         <div className="profile-content">
           {profile.posts.length === 0 ? (
-            <p> No posts yet </p>
+            <p>No posts yet</p>
           ) : (
             profile.posts.map((post) => (
               <Post
@@ -125,13 +115,13 @@ const Profile = () => {
           <h3>Suggest Friend</h3>
           <div className="suggest-friend">
             <div className="friend-pic"></div> {/* Friends picture */}
-            <p>Oggy</p>
+            {/* <p>{profile.friends}</p> */}
           </div>
         </div>
         <div className="interaction-section">
           <h3>Your Group</h3>
-          <div className="group-pic"></div> {/* Group picture */}
-          <p>Meo's Kingdom</p>
+          <div className="group-pic"></div> 
+          {/* <p>{profile.groups}</p> */}
         </div>
       </div>
     </div>
