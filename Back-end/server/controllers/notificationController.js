@@ -1,4 +1,8 @@
 const notificationModel = require('../models/notificationModel.js');
+const { validationResult } = require('express-validator');
+const Post = require('../models/postModel');  // Adjust the path to your actual model location
+const Group = require('../models/groupModel');  // Adjust the path to your actual model location
+const User = require('../models/userModel');
 const friednshipModel  = require('../models/friendshipModel.js')
 // Common function to save a notification
 const saveNotification = async (notificationData, res) => {
@@ -14,17 +18,27 @@ const saveNotification = async (notificationData, res) => {
 
 // Fetch all notifications for a user
 const getAllNotifications = async (req, res) => {
-    const { userId } = req.query; 
-    if (!userId) return res.status(400).json({ error: 'userId is required' });
-
+    const { userId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+  
     try {
-        const notifications = await notificationModel.find({ received_by: userId }).sort({ createdAt: -1 });
-        res.json(notifications);
+      const notifications = await notificationModel.find({ received_by: userId })
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+  
+      const total = await notificationModel.countDocuments({ received_by: userId });
+  
+      res.status(200).json({
+        notifications,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while retrieving notifications.' });
+      res.status(500).json({ error: 'Failed to fetch notifications' });
     }
-};
-
+  };
 // Fetch a single notification by ID
 const getOneNotification = async (req, res) => {
     const { id } = req.params;
@@ -36,6 +50,8 @@ const getOneNotification = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while retrieving the notification.' });
     }
 };
+
+// Create a friend request notification
 const createFriendRequestNotification = async (req, res) => {
     const { senderId, receiverId } = req.body;
     const result = await sendFriendRequest(senderId, receiverId);
@@ -77,8 +93,8 @@ const sendFriendRequest = async (senderId, receiverId) => {
         console.error('Error sending friend request:', error);
         return { msg: 'Internal Server Error' };
     }
-};
-// Create a friend acceptance notification
+};    
+    // Create a friend acceptance notification
 const createFriendAcceptedNotification = async (req, res) => {
     const { triggered_by, received_by } = req.body;
     await saveNotification({
@@ -199,18 +215,33 @@ const createPostNotificationForFriends = async (req, res) => {
     }, res);
 };
 
-// Create a post notification for group members
 const createPostNotificationForGroup = async (req, res) => {
-    const { triggered_by, received_by, post_id, group_id } = req.body;
-    await saveNotification({
+    const { triggered_by, group_id, post_id } = req.body;
+  
+    // Validate post, group, and user existence
+    const post = await Post.findById(post_id);
+    const group = await Group.findById(group_id);
+    const user = await User.findById(triggered_by);
+  
+    if (!post || !group || !user) {
+      return res.status(400).json({ error: 'Invalid post, group, or user' });
+    }
+  
+    // Create notification
+    try {
+      const newNotification = new Notification({
         notification_type: 'postCreatedForGroup',
-        triggered_by,  // User who created the post
-        received_by,   // Group member
+        triggered_by,
+        received_by: group.members,  // Assuming you're notifying all group members
         post_id,
-        group_id,      // Group where the post was created
-    }, res);
-};
-
+        group_id,
+      });
+      await newNotification.save();
+      res.status(201).json(newNotification);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to create notification' });
+    }
+  };
 
 const createNewUserNotification = async (req, res) => {
     const { triggered_by, received_by } = req.body;
