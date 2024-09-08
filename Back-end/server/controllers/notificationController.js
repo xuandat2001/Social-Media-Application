@@ -1,6 +1,5 @@
 const notificationModel = require('../models/notificationModel.js');
-const { validationResult } = require('express-validator');
-
+const friednshipModel  = require('../models/friendshipModel.js')
 // Common function to save a notification
 const saveNotification = async (notificationData, res) => {
     try {
@@ -37,15 +36,47 @@ const getOneNotification = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while retrieving the notification.' });
     }
 };
-
-// Create a friend request notification
 const createFriendRequestNotification = async (req, res) => {
-    const { triggered_by, received_by } = req.body;
-    await saveNotification({
-        notification_type: 'friendRequest',
-        triggered_by,
-        received_by,
-    }, res);
+    const { senderId, receiverId } = req.body;
+    const result = await sendFriendRequest(senderId, receiverId);
+    return res.status(200).send(result);
+}
+// Create a friend request notification
+const sendFriendRequest = async (senderId, receiverId) => {
+    try {
+        // Check if the friendship already exists
+        const existingFriendship = await friednshipModel.findOne({
+            $or: [
+                { user1_id: senderId, user2_id: receiverId },
+                { user1_id: receiverId, user2_id: senderId },
+            ],
+        });
+
+        if (existingFriendship) {
+            return { msg: 'Friend request already sent or accepted.' };
+        }
+
+        // Create a new friendship request
+        const newFriendship = new friednshipModel({
+            user1_id: senderId,
+            user2_id: receiverId,
+            status: 'pending',
+        });
+        await newFriendship.save();
+
+        // Create a notification for the receiver
+        const newNotification = new notificationModel({
+            receiver_id: receiverId,
+            sender_id: senderId,
+            type: 'friend-request',
+        });
+        await newNotification.save();
+
+        return { msg: 'Friend request sent successfully' };
+    } catch (error) {
+        console.error('Error sending friend request:', error);
+        return { msg: 'Internal Server Error' };
+    }
 };
 // Create a friend acceptance notification
 const createFriendAcceptedNotification = async (req, res) => {
