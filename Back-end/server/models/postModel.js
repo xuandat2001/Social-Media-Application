@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
   numberOfComment: Number,
   post_access_right: String,
   image_url: String,
+  email:String,
   createdAt: {
     type: Date,
     default: new Date(),

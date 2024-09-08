@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Post from "../../components/Post.jsx";
-import testImage from "../../image/Screenshot 2024-08-12 000128.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe, faUserPlus } from "@fortawesome/free-solid-svg-icons"; // Add user icon
 import "../../css/group.css";
 import GroupHeader from "./GroupPageComponent/GroupHeader.jsx";
 import GroupRule from "./GroupPageComponent/GroupRule.jsx";
 import InvitationBox from "../GroupPage/GroupPageComponent/invitationBox.jsx"; // Import the InvitationBox
-
+import { useAuth } from "../../Authentication_Context/Auth_Provider.jsx";
+import { formatDistanceToNow } from 'date-fns';
 function Group() {
+  const { user } = useAuth();
   const { groupId } = useParams(); // Get groupId from URL
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showInvitation, setShowInvitation] = useState(false); // State for invitation box
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const fetchGroupDetails = async () => {
@@ -22,7 +22,12 @@ function Group() {
         const response = await fetch(`http://localhost:3000/api/groups/${groupId}`);
         if (!response.ok) throw new Error("Error fetching group details");
         const data = await response.json();
+
         setGroup(data); // Set the fetched group data
+
+        const postResponse = await fetch(`http://localhost:3000/api/posts/user/${user.id}`);
+        const postData = await postResponse.json();
+        setPosts(postData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -36,19 +41,6 @@ function Group() {
   if (loading) return <p>Loading group details...</p>;
   if (error) return <p>Error loading group details: {error}</p>;
 
-  const posts = [
-    {
-      id: 1,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    // other posts
-  ];
 
   return (
     <div className="group-page">
@@ -63,14 +55,15 @@ function Group() {
         <div className="row">
           <div className="col-8">
 
-            {posts.map((post) => (
-              <Post
-                key={post.id}
-                avatar={post.avatar}
-                userName={post.userName}
+          {posts.map((post) => (
+              <Post        
+                key={post._id}
+                postId ={post._id}
+                avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
+                fullName={post.user && post.user.fullName ? post.user.fullName : 'Anonymous'}
                 content={post.content}
-                logo={post.logo}
-                image={post.image}
+                time={formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                image={`data:image/png;base64,${post.image_url}`}
                 numberOfReaction={post.numberOfReaction}
                 numberOfComment={post.numberOfComment}
               />

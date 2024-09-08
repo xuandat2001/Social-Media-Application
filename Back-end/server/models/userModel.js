@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     userAvatar: {
         type: String, // URL or base64 string for the avatar
         required: true
+    },
+    email:{
+        type: String, // URL or base64 string for the avatar
+        required: false
     }
 });
 

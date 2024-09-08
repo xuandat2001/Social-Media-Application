@@ -63,12 +63,61 @@ const createNewUser = async (req, res) => {
     }
 };
 
-const editUser = async(req, res) => {
-    const { body, findUser } = req;
-    Object.assign(findUser, body);
-    await findUser.save();
-    return res.sendStatus(200);
+
+
+
+const editUser = async (req, res) => {
+    try {
+        const userId = req.params.id; // Ensure you are extracting userId correctly
+        const { body } = req;
+
+        // Fetch the user from the database
+        const findUser = await userModel.findById(userId);
+        if (!findUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Keep existing image hash if no new image is uploaded
+        let userAvatar = findUser.userAvatar;
+
+        // Check if a new image file is uploaded
+        if (req.file) {
+            // Convert the new image to Base64 and update `userAvatar`
+            userAvatar = fs.readFileSync(req.file.path, { encoding: 'base64' });
+
+            // Remove the temporary file after reading it
+            fs.unlink(req.file.path, (err) => {
+                if (err) console.error('Error deleting temp file:', err);
+            });
+        }
+
+        // Update the user information
+        findUser.fullName = body.fullName || findUser.fullName;
+        findUser.userAvatar = userAvatar;
+        findUser.email = body.email || findUser.email;
+
+        // Save the updated user
+        await findUser.save();
+        return res.status(200).json({
+            message: 'Profile updated successfully!',
+            findUser: {
+                id: findUser.id, // Use findUser instead of user
+                fullName: findUser.fullName,
+                email: findUser.email,
+                userAvatar: findUser.userAvatar
+            }
+        });
+    } catch (error) {
+        console.error("Error updating user:", error);
+        return res.status(400).json({ error: "Failed to update user" });
+    }
 };
+
+
+
+
+
+
 const  deleteUser = async (req, res) => {
     const { findUser } = req;
     await findUser.deleteOne(); 

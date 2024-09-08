@@ -3,17 +3,15 @@ import { formatDistanceToNow } from 'date-fns';
 
 import "../../css/Home.css";
 import Post from "../../components/Post";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
 import React, { useState, useEffect } from 'react';
 import CreatePostBox from "../../components/User-Site/CreatePostBox";
-
+import { useAuth } from "../../Authentication_Context/Auth_Provider";
 
 const Home = () => {
   const [showCreatePostBox, setShowCreatePostBox] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [strangerList, setStrangerList] = useState([]);
+  const {user} = useAuth();
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -25,18 +23,6 @@ const Home = () => {
       }
     };
     fetchPosts();
-  }, []);
-  useEffect(() => {
-    const fetchStrangers = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/users');
-        const data = await response.json();
-        setStrangerList(data);
-      } catch (error) {
-        console.error('Error fetching users', error);
-      }
-    };
-    fetchStrangers();
   }, []);
   const onClick = () =>{
     setShowCreatePostBox(true);
@@ -71,7 +57,7 @@ const Home = () => {
             ))}
           </div>
           <div className="col-4 sidebar">
-            <FriendSidebar strangerList={strangerList} />
+            <FriendSidebar />
           </div>
         </div>
       </div>

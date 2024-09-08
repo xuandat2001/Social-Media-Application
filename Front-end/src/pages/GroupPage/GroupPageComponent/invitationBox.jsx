@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import UserItem from './userItem';
-
+import { useAuth } from "../../../Authentication_Context/Auth_Provider";
 function InvitationBox({ onClose }) {
     const [search, setSearch] = useState("");
     const [acceptFriends, setAcceptFriend] = useState([]);
+    const {user} = useAuth();
     useEffect(() => {
         const fetchAcceptFriends = async () => {
           try {
-            const response = await fetch('http://localhost:3000/api/acceptedFriend');
+            const response = await fetch(`http://localhost:3000/friends/accepted/${user.id}`);
             const data = await response.json();
             setAcceptFriend(data);
           } catch (error) {

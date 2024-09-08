@@ -8,7 +8,7 @@ const upload = multer({ dest: 'avtuploads/' });
 userRouter.get('/api/users', getAllUsers);
 userRouter.get('/api/users/:id', findUserById, getOneUser);
 userRouter.post('/api/users/register', upload.single('userAvatar') ,createNewUser);
-userRouter.put('/api/users/:id', findUserById, editUser);
+userRouter.patch('/api/users/:id', upload.single('userAvatar'), editUser)
 userRouter.delete('/api/users/:id', findUserById, deleteUser);
 
 module.exports = { userRouter };

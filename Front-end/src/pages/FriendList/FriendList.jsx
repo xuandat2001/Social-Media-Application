@@ -1,34 +1,23 @@
-import testImage from "../../image/Screenshot 2024-08-12 000128.png";
+import { useState, useEffect } from "react";
 import Friend from "./Friend";
 import FriendSidebar from "../../components/FriendSidebar";
 import CreatePost from "../../components/Create-Post";
+import { useAuth } from "../../Authentication_Context/Auth_Provider";
 function FriendList(){
-    const friends = [
-        {
-            id: 1,
-            image: testImage,
-            userName: "Smiling",
-            numberOfFriends: 40,
-        },
-        {
-            id: 2,
-            image: testImage,
-            userName: "Smiling",
-            numberOfFriends: 40,
-        },
-        {
-            id: 3,
-            image: testImage,
-            userName: "Smiling",
-            numberOfFriends: 40,
-        },
-        {
-            id: 4,
-            image: testImage,
-            userName: "Smiling",
-            numberOfFriends: 40,
-        }
-    ]
+    const [acceptFriends, setAcceptFriend] = useState([]);
+    const {user} = useAuth();
+    useEffect(() => {
+        const fetchAcceptFriends = async () => {
+          try {
+            const response = await fetch(`http://localhost:3000/friends/accepted/${user.id}`);
+            const data = await response.json();
+            setAcceptFriend(data);
+          } catch (error) {
+            console.error("Error fetching accepted friends:", error);
+          }
+        };
+        fetchAcceptFriends();
+      }, []);
     return(
         <>
             <div className="container-fluid">
@@ -40,15 +29,17 @@ function FriendList(){
                         <div className="friend-list">
                         <h2>Your Friends</h2>
                             <div className="row">
-                                {friends.length > 0 ? (
-                                    friends.map((friend) => (
-                                        <div className="col-3" key={friend.id}>
-                                            <Friend  avatar={friend.image} userName={friend.userName} numberOfFriends={friend.numberOfFriends} />
-                                        </div>
-                                    ))
-                                    ) : (
-                                    <p>No friends available.</p>
-                                )}
+                        {acceptFriends.length === 0 ? (
+                            <div className="no-friends-message">
+                                <p>You have no friend yet</p>
+                            </div>
+                        ) : (
+                            filteredFriends.map((friend) => (
+                                <div className="userItem" key={friend._id}>
+                                    <Friend  avatarUser={`data:image/png;base64,${friend.avatarUser}`} userName={friend.userName} />
+                                </div>
+                            ))
+                        )}
                             </div>
                         </div>
 

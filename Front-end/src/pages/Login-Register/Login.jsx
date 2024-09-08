@@ -31,7 +31,6 @@ const Login = () => {
         const data = await response.json(); 
         
         alert(data.msg); 
-        console.log({id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName});
         setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName, userAvatar: data.findUser.userAvatar  });
         console.log(setUser({ id: data.findUser.id, userName: data.findUser.userName, fullName : data.findUser.fullName, userAvatar: data.findUser.userAvatar }));
         navigate('/'); // Redirect to homepage 

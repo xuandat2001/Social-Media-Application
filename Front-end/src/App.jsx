@@ -7,7 +7,7 @@ import Home from './pages/HomePage/Home';
 import GroupList from './pages/GroupPage/GroupList';
 import FriendList from './pages/FriendList/FriendList';
 import Profile from './pages/Profile-user/Profile';
-import EditProfile from './pages/Profile-user/EditProfile'
+import EditProfileForm from './pages/Profile-user/EditProfile'
 import StrangerProfile from './pages/Stranger-profile/StrangerProfile';
 import Login from './pages/Login-Register/Login';
 import Register from './pages/Login-Register/Register';
@@ -34,8 +34,8 @@ const App = () => {
             <Route path="/groupList" element={<ProtectedRoute element={<GroupList />} />} />
             <Route path="/friendList" element={<ProtectedRoute element={<FriendList />} />} />
             <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
-            <Route path="/editprofile" element={<ProtectedRoute element={<EditProfile />} />} />
-            <Route path="/strangerprofile" element={<ProtectedRoute element={<StrangerProfile />} />} />
+            <Route path="/editprofile" element={<ProtectedRoute element={<EditProfileForm />} />} />
+            <Route path="/strangerprofile/:userId" element={<ProtectedRoute element={<StrangerProfile />} />} />
             <Route path="/ " element={<ProtectedRoute element={<StrangerProfile />} />} />
             <Route path="/groupDetail/:groupId" element={<ProtectedRoute element={<Group />} />} />
             <Route path="/editPost/:postId" element={<ProtectedRoute element={<EditPostBox />} />} />

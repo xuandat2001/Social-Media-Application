@@ -82,7 +82,7 @@ function Header() {
                     </ul>
                   </div>
                   <div className="col-3">
-                    <h3 className="userName">Wellcome: {user.fullName}</h3>
+                    <h3 className="userName">Wellcome: {user.fullName ? user.fullName : user.userName}</h3>
                     <NavLink to="/login">
                     <button
                       className="btn btn-sign-out"

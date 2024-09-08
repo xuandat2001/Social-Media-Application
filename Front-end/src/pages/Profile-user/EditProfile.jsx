@@ -1,155 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
-import '../../css/EditProfile.css';
+import React, { useState, useEffect } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from "../../Authentication_Context/Auth_Provider";
 
-function EditProfile({ profile, setProfile }) {
-    const { user } = useAuth(); // Access the logged-in user
-    const [editedProfile, setEditedProfile] = useState({});
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+const EditProfileForm = () => {
+    const { user, updateUser } = useAuth();
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        profileImage: null, // Store file here
+    });
+    const [imagePreview, setImagePreview] = useState(""); // Store preview for image
 
-    const userId = user?.id; // Using the logged-in user's ID
-
-    // Function to fetch profile data
-    const fetchProfileData = async (id) => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/profile?userId=${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch profile');
-        }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-        throw error;
-      }
-    };
-
-    // Fetch profile data when the component mounts
+    // Pre-fill form data with current user info when the component mounts
     useEffect(() => {
-        const fetchProfile = async () => {
-            try {
-                if (!userId) {
-                    console.error('User ID is missing'); 
-                    setError('User ID is missing');
-                    setLoading(false);
-                    return;
-                }
-                
-                console.log('Fetching profile for userId:', userId); // Log userId for debugging
-                const data = await fetchProfileData(userId);
-                setEditedProfile(data); // Pre-fill form with profile data
-                setLoading(false);
-            } catch (err) {
-                console.error('Error:', err);
-                setError('Failed to fetch profile'); 
-                setLoading(false);
-            }
-        };
-
-        if (userId) {
-            fetchProfile();
+        if (user) {
+            setFormData({
+                fullName: user.fullName || "",
+                email: user.email || "",
+                profileImage: null,
+            });
         }
-    }, [userId]);
+    }, [user]);
 
+    // Handle text inputs
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
-        if (name === "userName" || name === "password") {
-            setEditedProfile({
-                ...editedProfile,
-                userId: {
-                    ...editedProfile.userId, // Ensure it's overwriting other fields in userId
-                    [name]: value, // Update the username or password inside userId
-                },
-            });
-        } else {
-            setEditedProfile({
-                ...editedProfile,
-                [name]: value,
-            });
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    // Handle image input and set image preview
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    profileImage: file,
+                }));
+                setImagePreview(reader.result); // Set image preview
+            };
+            reader.readAsDataURL(file); // Convert image to base64
         }
     };
 
-    const handleSave = async () => {
-    try {
-        // Make sure editedProfile has the latest changes
-        console.log('Saving edited profile:', editedProfile); // Debugging log
-
-        const response = await fetch(`http://localhost:3000/api/profile/${editedProfile._id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(editedProfile),  // Directly sending editedProfile
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to update profile');
+    // Validate form fields
+    const validateForm = () => {
+        if (!formData.fullName || !formData.email) {
+            alert("Full Name and Email are required.");
+            return false;
         }
+        return true;
+    };
 
-        const updatedProfile = await response.json();
-        
-        console.log('Profile updated successfully:', updatedProfile);
-
-        setProfile(updatedProfile);  // Update the profile state
-        navigate(`/profile/${editedProfile._id}`);
-    } catch (err) {
-        console.error('Error updating profile:', err);
-    }
-};
-
-
-    if (loading) {
-        return <p>Loading profile...</p>;
-    }
-
-    if (error) {
-        return <p>Error: {error}</p>;
-    }
+    // Handle form submission with FormData
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        if (!validateForm()) return;
+    
+        const formDataToSend = new FormData();
+        formDataToSend.append('fullName', formData.fullName);
+        formDataToSend.append('email', formData.email);
+        if (formData.profileImage) {
+            formDataToSend.append('userAvatar', formData.profileImage);
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:3000/api/users/${user.id}`, {
+                method: "PATCH",
+                body: formDataToSend,
+            });
+    
+            const responseText = await response.text();
+            console.log('Response Text:', responseText);
+    
+            if (response.ok) {
+                alert("Profile updated successfully!");
+                // Update user in context
+                const updatedUser = JSON.parse(responseText).findUser;
+                updateUser(updatedUser);
+                setFormData({
+                    fullName: "",
+                    email: "",
+                    profileImage: null,
+                });
+                setImagePreview(""); // Clear image preview
+            } else {
+                alert(`Failed to update profile: ${responseText || "Unknown error"}`);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while updating your profile.");
+        }
+    };
+    
 
     return (
-        <div className="profile-edit">
-            <div className="profile-edit-container">
-                <Link to={`/profile/${userId}`}>
-                    <p>Back to Profile</p>
-                </Link>
-                <h1>Edit Profile</h1>
-                <form className="edit-form">
-                    <label>Name:</label>
+        <div className="container mt-5">
+            <h2 className="mb-4">Edit Profile Form</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="fullName" className="form-label">Full Name</label>
                     <input
                         type="text"
-                        name="userName"
-                        value={editedProfile.userId?.userName || ""} // Access username from userId
-                        onChange={handleChange} // Update the nested userId.userName
-                    />  
-
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Enter new password"  
-                        value={editedProfile.userId?.password || ""}
-                        onChange={handleChange} // Update the nested userId.password
-                    />
-
-                    <label>Bio:</label>
-                    <input
-                        type="text"
-                        name="bio"
-                        value={editedProfile.bio || ""}
+                        className="form-control"
+                        id="fullName"
+                        name="fullName"
+                        value={formData.fullName}
                         onChange={handleChange}
+                        placeholder="Enter your full name"
+                        required
                     />
-
-                    <button className='button-edit-profile' type="button" onClick={handleSave}>
-                        Save Changes
-                    </button>
-                </form>
-            </div>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="profileImage" className="form-label">Upload Profile Image</label>
+                    <input
+                        type="file"
+                        className="form-control"
+                        id="profileImage"
+                        onChange={handleImageChange}
+                    />
+                </div>
+                {imagePreview && (
+                    <div className="mb-3">
+                        <label className="form-label">Image Preview:</label>
+                        <img
+                            src={imagePreview}
+                            alt="Profile Preview"
+                            className="img-thumbnail"
+                            style={{ maxWidth: "200px", maxHeight: "200px" }}
+                        />
+                    </div>
+                )}
+                <button type="submit" className="btn btn-primary">Save Changes</button>
+            </form>
         </div>
     );
-}
+};
 
-export default EditProfile;
+export default EditProfileForm;

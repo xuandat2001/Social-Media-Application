@@ -12,6 +12,19 @@ const getAllPosts = async (req, res) => {
         res.status(500).json({ error: 'Error fetching posts' });
     }
 };
+const getPostsByUser = async (req, res) => {
+    const userId = req.params.userId;
+    try {
+      // Find all posts by the user
+      const posts = await postModel.find({ user: userId }).populate('user');
+      if (posts.length === 0) {
+        return res.status(404).json({ message: 'No posts found for this user' });
+      }
+      res.status(200).json(posts);
+    } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+    }
+};
 const getOnePost =  async(req, res) => {
     const { findPost } = req;
     if (!findPost) {
@@ -147,4 +160,4 @@ const  deletePost = async (req, res) => {
     return res.sendStatus(200);
 };
 
-module.exports = {getAllPosts, getOnePost, createNewPost, editPost, deletePost, sharePost};
+module.exports = {getAllPosts, getOnePost, createNewPost, editPost, deletePost, sharePost,getPostsByUser};

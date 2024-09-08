@@ -57,11 +57,12 @@ function Post({
       )}
       <div className="container container-post">
         <div className="row">
-          <div
+        <div
             style={{ backgroundColor: "#FED7FF", borderTopLeftRadius: "10px" }}
             className="col-11 d-flex align-items-center"
           >
-            <img className="avatar me-3" src={avatar} alt="User avatar" />
+          <img className="avatar me-3" src={avatar} alt="User avatar" />
+      
             <div className="post-info">
               <h3>{fullName}</h3>
               <p className="time-post">
@@ -91,15 +92,19 @@ function Post({
             <p>{content}</p>
           </div>
         </div>
+          {image && (
         <div className="row">
-          <div className="post-image ">
-            <img
-              className="main-image d-block mx-auto rounded-circle"
-              src={image}
-              alt="User Content image"
-            />
-          </div>
+        <div className="post-image ">
+                        <img
+                        className="main-image d-block mx-auto rounded-circle"
+                        src={image}
+                        
+                      />
+         
+
         </div>
+      </div>
+            )}
         <div className="row number-of-interaction">
           <div className="col-6">
             <p>
