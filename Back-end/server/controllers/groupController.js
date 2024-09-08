@@ -65,11 +65,11 @@ const createNewGroup = async (req, res) => {
         // Save the updated request
         await request.save();
         
-        await createGroupCreationNotification({
-            body: { triggered_by: req.adminId, received_by: request.user_id, group_id: savedGroup._id }
-        }, res);
-        // Respond with a success message and the created group
-        res.status(200).json({ message: 'Group created successfully', group: savedGroup });
+        // await createGroupCreationNotification({
+        //     body: { triggered_by: req.adminId, received_by: request.user_id, group_id: savedGroup._id }
+        // }, res);
+        // // Respond with a success message and the created group
+        // res.status(200).json({ message: 'Group created successfully', group: savedGroup });
     } catch (error) {
         console.error('Error approving group request:', error);
         res.status(500).json({ error: 'Error approving group request' });
