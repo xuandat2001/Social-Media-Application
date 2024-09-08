@@ -20,13 +20,17 @@ const notificationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'posts',
     },
+    group_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'groups',
+    },
     comment_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'comments',
     },
     reaction_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Reaction',
+        ref: 'reactions',
     }, 
     isRead: {
         type: Boolean,
