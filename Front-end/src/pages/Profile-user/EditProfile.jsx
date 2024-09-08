@@ -95,7 +95,7 @@ function EditProfile({ profile, setProfile }) {
                         onChange={handleChange}
                     />
 
-                    <button type="button" onClick={handleSave}>Save Changes</button>
+                    <button className='button-edit-profile' type="button" onClick={handleSave}>Save Changes</button>
                 </form>
                 <div className="profile-actions">
                 </div>

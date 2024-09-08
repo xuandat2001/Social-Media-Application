@@ -8,8 +8,9 @@
 }
 
 .nav-insert-buttons{
-   width: 230px;
-   border-radius: 10px;
+    margin-left: 95px;
+    width: 120px;
+    border-radius: 10px;
 }
 
 .nav-insert-buttons a{

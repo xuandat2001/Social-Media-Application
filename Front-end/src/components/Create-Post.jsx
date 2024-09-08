@@ -32,18 +32,6 @@ const CreatePost = ({ showCreatePostBox }) => {
             <span className="ms-2">Image</span>
           </button> 
         </div>
-        <div className="text-center icon">
-          <button style={{ backgroundColor: "transparent", border: "none" }} onClick={showCreatePostBox}>
-            <img src={video} alt="logo" />
-            <span className="ms-2">Video</span>
-          </button>
-        </div>
-        <div className="text-center icon">
-          <button style={{ backgroundColor: "transparent", border: "none" }} onClick={showCreatePostBox}>
-            <img src={story} alt="logo" />
-            <span className="ms-2">Story</span>
-          </button>
-        </div>
       </div>
     </div>
   );

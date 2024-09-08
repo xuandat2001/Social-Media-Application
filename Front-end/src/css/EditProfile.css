@@ -27,16 +27,16 @@
     border: 1px solid #ccc;
   }
   
-  button {
+  .button-edit-profile {
     padding: 10px;
-    background-color: #007bff;
+    background-color: #FED7FF;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #0056b3;
+  .button-edit-profile:hover {
+    background-color: #FED7FF;
   }
   
