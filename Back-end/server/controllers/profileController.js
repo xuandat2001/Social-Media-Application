@@ -33,25 +33,39 @@ const getProfile = async (req, res) => {
 };
 
 
-  // const updateProfile = async (req, res) => {
-  //   console.log('Update Profile Request:', req.params.profileId, req.body);
-  //   try {
-  //     const profile = req.findProfile; // Use the profile document from middleware
-  //     const { bio } = req.body;
-  
-  //     if (!profile) {
-  //       return res.status(404).json({ message: 'Profile not found' });
-  //     }
-  
-  //     // Update the profile with new data
-  //     profile.bio = bio;
-  //     const updatedProfile = await profile.save(); // Save the updated profile
-  
-  //     res.status(200).json(updatedProfile); // Respond with the updated profile
-  //   } catch (error) {
-  //     console.error('Error updating profile:', error.message); // Log the error message
-  //     res.status(500).json({ message: 'Server error', error: error.message });
-  //   }
-  // };
+const updateProfile = async (req, res) => {
+  const { profileId } = req.params;  // Extract profile ID from the request parameters
+  const updatedData = req.body;  // Extract the updated profile data from the request body
 
-module.exports = { getProfile, /*updateProfile*/ };
+  try {
+      // Find the profile by its ID
+      const profile = await UserProfile.findById(profileId);
+
+      if (!profile) {
+          return res.status(404).json({ message: 'Profile not found' });
+      }
+
+      if (updatedData.bio) {
+          profile.bio = updatedData.bio;
+      }
+
+      if (updatedData.userId?.userName) {
+          profile.userId.userName = updatedData.userId.userName;
+      }
+
+      if (updatedData.userId?.password) {
+          profile.userId.password = updatedData.userId.password;
+      }
+
+      const updatedProfile = await profile.save();
+
+      res.status(200).json(updatedProfile);
+  } catch (error) {
+      console.error('Error updating profile:', error.message);  
+      res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+
+
+module.exports = { getProfile, updateProfile };
