@@ -8,10 +8,12 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
 import React, { useState, useEffect } from 'react';
 import CreatePostBox from "../../components/User-Site/CreatePostBox";
+import EditPostBox from "../../components/User-Site/EditPostBox";
 
 const Home = () => {
-  const [showCreatePostBox, setShowCreatePostBox] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [showCreatePostBox, setShowCreatePostBox] = useState(false);
+  const [showEditPostBox, setShowEditPostBox] = useState(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,12 +27,20 @@ const Home = () => {
     };
     fetchPosts();
   }, []);
-  const onClick = () =>{
+  const onClickCreatePostBox = () => {
     setShowCreatePostBox(true);
   }
 
   const closeCreatePostBox = () => {
       setShowCreatePostBox(false);
+  }
+
+  const onClickEditPostBox = () => {
+    setShowEditPostBox(true);
+  }
+
+  const closeEditPostBox = () => {
+    setShowEditPostBox(false);
   }
   return (
     <>
@@ -38,13 +48,17 @@ const Home = () => {
         <div className="row">
           <div className="col-8  posts">
             <div className="create-post">
-                <CreatePost showCreatePostBox={onClick} />
+                <CreatePost showCreatePostBox={onClickCreatePostBox} />
             </div>
                 {showCreatePostBox && (
                   <CreatePostBox showCreatePostBox={showCreatePostBox} closeCreatePostBox={closeCreatePostBox} />
                                 )}
+                {showEditPostBox && (
+                  <EditPostBox showEditPostBox={showEditPostBox} closeEditPostBox={closeEditPostBox} />
+                              )}
             {posts.map((post) => (
-              <Post
+              <Post showEditPostBox = {onClickEditPostBox}
+             
                 key={post._id}
                 avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
                 userName={post.user && post.user.userName ? post.user.userName : 'Anonymous'}

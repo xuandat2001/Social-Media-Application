@@ -75,7 +75,7 @@ function CreatePostBox({ showCreatePostBox, closeCreatePostBox }) {
                     </div>
                     <div className='row'>
                         <div className='col-1 add-margin-right'>
-                            <img className='avatar' src={dogImage} alt='avatar' />
+                            <img className='avatar' src={`data:image/png;base64,${user.userAvatar}`} alt='avatar' />
                         </div>
                         <div className='col-6'>
                             <h2>{user.userName}</h2>

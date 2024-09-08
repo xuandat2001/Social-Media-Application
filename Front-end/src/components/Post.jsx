@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import "../css/post.css";
 import Reaction from "./Reaction.jsx";
 import CommentBox from "./CommentBox.jsx";
-function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComment}) {
+function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComment, showEditPostBox}) {
   const {icon,color,text} = useSelector(state=> state.reaction)
   const [showReactions, setShowReactions] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -26,8 +26,8 @@ function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComme
             </div>
           </div>
           <div style={{ backgroundColor: '#FED7FF', borderTopRightRadius: '10px' }} className="col-1">
-            <button className="btn float-end">
-              <FontAwesomeIcon icon={faGear} />
+            <button className="btn float-end" onClick={showEditPostBox}>
+              <FontAwesomeIcon icon={faGear}/>
             </button>
             <button className="btn btn-outline-danger float-end" style={{ marginTop: '10px', marginBottom: '20px' }}>
               Report
