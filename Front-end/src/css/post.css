@@ -39,4 +39,23 @@
    border: none;
    background-color: #F6F6F6;
 }
+.modal-overlay-report {
+    position: fixed;  /* Fix the overlay to the viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Ensure it's on top */
+}
 
+.modal-content-report {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 800px; /* Adjust size as needed */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Modal shadow */
+}

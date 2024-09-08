@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import "../css/post.css";
 import Reaction from "./Reaction.jsx";
 import CommentBox from "./CommentBox.jsx";
+import MessageInput from "./ReportMessage.jsx";
 function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComment, showEditPostBox}) {
   const {icon,color,text} = useSelector(state=> state.reaction)
   const [showReactions, setShowReactions] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showReportMessage, setShowReportMessage] = useState(false);
   const closeComments = () => {
     setShowComments(false);
   };
@@ -29,7 +31,7 @@ function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComme
             <button className="btn float-end" onClick={showEditPostBox}>
               <FontAwesomeIcon icon={faGear}/>
             </button>
-            <button className="btn btn-outline-danger float-end" style={{ marginTop: '10px', marginBottom: '20px' }}>
+            <button className="btn btn-outline-danger float-end" onClick={()=>setShowReportMessage(true)} style={{ marginTop: '10px', marginBottom: '20px' }}>
               Report
             </button>
           </div>
@@ -86,7 +88,13 @@ function Post({avatar,userName,content,time,image,numberOfReaction,numberOfComme
           </div>
         </div>
       </div>
-
+      {showReportMessage && (
+        <div className="modal-overlay-report">
+          <div className="modal-content-report">
+            <MessageInput onClose={() => setShowReportMessage(false)} />
+          </div>
+        </div>
+      )}
       {showComments && (
         <CommentBox showComments={showComments} onClose={closeComments} />
       )}
