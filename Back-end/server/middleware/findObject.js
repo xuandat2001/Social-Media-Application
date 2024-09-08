@@ -4,6 +4,7 @@ const postModel = require('../models/postModel.js');
 const notificationModel = require('../models/notificationModel.js');
 const commentModel = require('../models/commentModel.js');
 const memberShipModel = require('../models/membershipModel.js')
+const profileModel = require('../models/profileModel.js');
 
 const findById = (model, key) => {
     return async (req, res, next) => {
@@ -27,4 +28,5 @@ const findPostById = findById(postModel, 'findPost');
 const findNotificationById = findById(notificationModel, 'findNotification');
 const findCommentById = findById(commentModel, 'findComment');
 const findMemberShipById = findById(memberShipModel, 'findMemberShip');
-module.exports = { findUserById, findGroupById, findPostById,findNotificationById,findCommentById,findMemberShipById };
+const findProfileById = findById(profileModel, 'findProfile');
+module.exports = { findUserById, findGroupById, findPostById,findNotificationById,findCommentById,findMemberShipById,findProfileById};
