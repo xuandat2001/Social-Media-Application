@@ -94,7 +94,7 @@ function CreatePostBox({ showCreatePostBox, closeCreatePostBox }) {
                         <div className='col-6'></div>
                         <div className='col-6'>
                             <nav className="nav add-border nav-insert-buttons">
-                                <button style={{ backgroundColor: "transparent", border: "none", cursor: 'pointer'  }} className="icon-color">
+                                <label className="icon-color" style={{ cursor: 'pointer', marginLeft: '12px', marginTop: '13px' }}>
                                     <FontAwesomeIcon icon={faImage} />
                                     <input 
                                         type="file" 
@@ -102,7 +102,7 @@ function CreatePostBox({ showCreatePostBox, closeCreatePostBox }) {
                                         onChange={handleImageUpload} 
                                         accept="image/*"
                                     />
-                                </button>
+                                </label>
                                 <button type="button" className="custom-post-button" onClick={handleSubmit}>Post</button>
                             </nav>
                         </div>
@@ -110,6 +110,7 @@ function CreatePostBox({ showCreatePostBox, closeCreatePostBox }) {
                 </div>
             )}
         </>
+        
     );
 }
 

@@ -17,6 +17,7 @@ import UserManagement from './pages/Admin-Site/UserManagement';
 import GroupRequest from './pages/Admin-Site/GroupRequest';
 import ContentManagement from './pages/Admin-Site/ContentManagement';
 import Group from './pages/GroupPage/Group';
+import EditPostBox from './components/User-Site/EditPostBox';
 
 const App = () => {
   const location = useLocation();
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/strangerprofile" element={<ProtectedRoute element={<StrangerProfile />} />} />
             <Route path="/ " element={<ProtectedRoute element={<StrangerProfile />} />} />
             <Route path="/groupDetail/:groupId" element={<ProtectedRoute element={<Group />} />} />
+            <Route path="/editPost/:postId" element={<ProtectedRoute element={<EditPostBox />} />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
