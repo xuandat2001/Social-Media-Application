@@ -8,13 +8,11 @@ import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import CreatePost from "../../components/Create-Post";
 import React, { useState, useEffect } from 'react';
 import CreatePostBox from "../../components/User-Site/CreatePostBox";
-import EditPostBox from "../../components/User-Site/EditPostBox";
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
   const [showCreatePostBox, setShowCreatePostBox] = useState(false);
-  const [showEditPostBox, setShowEditPostBox] = useState(false);
-
+  const [posts, setPosts] = useState([]);
+  const [strangerList, setStrangerList] = useState([]);
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -27,20 +25,24 @@ const Home = () => {
     };
     fetchPosts();
   }, []);
-  const onClickCreatePostBox = () => {
+  useEffect(() => {
+    const fetchStrangers = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/users');
+        const data = await response.json();
+        setStrangerList(data);
+      } catch (error) {
+        console.error('Error fetching users', error);
+      }
+    };
+    fetchStrangers();
+  }, []);
+  const onClick = () =>{
     setShowCreatePostBox(true);
   }
 
   const closeCreatePostBox = () => {
       setShowCreatePostBox(false);
-  }
-
-  const onClickEditPostBox = () => {
-    setShowEditPostBox(true);
-  }
-
-  const closeEditPostBox = () => {
-    setShowEditPostBox(false);
   }
   return (
     <>
@@ -48,17 +50,13 @@ const Home = () => {
         <div className="row">
           <div className="col-8  posts">
             <div className="create-post">
-                <CreatePost showCreatePostBox={onClickCreatePostBox} />
+                <CreatePost showCreatePostBox={onClick} />
             </div>
                 {showCreatePostBox && (
                   <CreatePostBox showCreatePostBox={showCreatePostBox} closeCreatePostBox={closeCreatePostBox} />
                                 )}
-                {showEditPostBox && (
-                  <EditPostBox showEditPostBox={showEditPostBox} closeEditPostBox={closeEditPostBox} />
-                              )}
             {posts.map((post) => (
-              <Post showEditPostBox = {onClickEditPostBox}
-             
+              <Post
                 key={post._id}
                 avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
                 userName={post.user && post.user.userName ? post.user.userName : 'Anonymous'}
@@ -71,7 +69,7 @@ const Home = () => {
             ))}
           </div>
           <div className="col-4 sidebar">
-            <FriendSidebar />
+            <FriendSidebar strangerList={strangerList} />
           </div>
         </div>
       </div>

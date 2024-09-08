@@ -4,14 +4,19 @@ const { matchedData, validationResult } = require('express-validator');
 const fs = require('fs');
 const { createFriendRequestNotification, createFriendAcceptedNotification, createFriendRejectedNotification, createNewUserNotification  } = require('../controllers/notificationController');
 
+
 const getAllUsers = async (req, res) => {
-    const { query: { filter, value } } = req;
-        let query = {};
-        if (filter && value) {
-            query[filter] = { $regex: value, $options: 'i' }; // Case-insensitive search
-        }
-        const users = await userModel.find(query);
-        res.send(users);
+    try {
+        // Assuming the logged-in user's ID is stored in the session (e.g., req.session.userId)
+        const loggedInUserId = req.session.userId;
+
+        // Fetch all users except the logged-in user
+        const users = await userModel.find({ _id: { $ne: loggedInUserId } });
+
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching users', error });
+    }
 };
 
 const getOneUser =  async(req, res) => {

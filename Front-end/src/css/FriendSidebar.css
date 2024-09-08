@@ -9,3 +9,16 @@
 .title {
     text-align: center;
 }
+.stranger-item{
+    border-bottom: 1px solid black;
+    margin-bottom: 20px;
+}
+.avatar-stranger{
+    width: 30px;
+    height: auto;
+    border-radius: 50%;
+    
+}
+.user-name{
+    display: inline-block;
+}
