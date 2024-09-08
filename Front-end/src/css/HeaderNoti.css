@@ -9,7 +9,7 @@
 
 .material-icons {
   font-size: 24px;
-  color: #ffffff; 
+  color: #000000; 
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   padding: 10px;
@@ -28,4 +28,24 @@
   border-radius: 50%;
   padding: 5px;
   font-size: 12px;
+}
+/* Style for the dropdown notification panel */
+.notification-dropdown {
+  position: absolute;
+  right: 0;
+  top: 40px;  /* Adjust depending on header size */
+  width: 300px;
+  max-height: 400px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+}
+/* Message for no notifications */
+.no-notifications {
+  padding: 20px;
+  text-align: center;
+  color: #999;
 }
