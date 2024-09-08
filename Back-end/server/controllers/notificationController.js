@@ -6,126 +6,216 @@ const saveNotification = async (notificationData, res) => {
     try {
         const newNotification = new notificationModel(notificationData);
         const savedNotification = await newNotification.save();
-        res.status(201).send(savedNotification);
+        res.status(201).json(savedNotification);
     } catch (error) {
-        res.status(500).send({ error: 'An error occurred while saving the notification.' });
+        res.status(500).json({ error: 'An error occurred while saving the notification.' });
     }
 };
 
+
 // Fetch all notifications for a user
 const getAllNotifications = async (req, res) => {
-    const { userId } = req.query; // Assuming notifications are filtered by userId
-    if (!userId) return res.status(400).send({ error: 'userId is required' });
+    const { userId } = req.query; 
+    if (!userId) return res.status(400).json({ error: 'userId is required' });
 
     try {
-        const notifications = await notificationModel.find({ userId }).sort({ createdAt: -1 });
-        res.send(notifications);
+        const notifications = await notificationModel.find({ received_by: userId }).sort({ createdAt: -1 });
+        res.json(notifications);
     } catch (error) {
-        res.status(500).send({ error: 'An error occurred while retrieving notifications.' });
+        res.status(500).json({ error: 'An error occurred while retrieving notifications.' });
     }
 };
 
 // Fetch a single notification by ID
 const getOneNotification = async (req, res) => {
-    const { findNotification } = req;
-    if (!findNotification) return res.status(404).send({ error: 'Notification not found' });
-    res.send(findNotification);
+    const { id } = req.params;
+    try {
+        const notification = await notificationModel.findById(id);
+        if (!notification) return res.status(404).json({ error: 'Notification not found' });
+        res.json(notification);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while retrieving the notification.' });
+    }
 };
 
 // Create a friend request notification
 const createFriendRequestNotification = async (req, res) => {
-    const { userId, targetUserId } = req.body;
+    const { triggered_by, received_by } = req.body;
     await saveNotification({
-        notiType: 'friendRequest',
-        userId: targetUserId,
-        targetUserId: userId,
+        notification_type: 'friendRequest',
+        triggered_by,
+        received_by,
     }, res);
 };
-
 // Create a friend acceptance notification
 const createFriendAcceptedNotification = async (req, res) => {
-    const { userId, targetUserId } = req.body;
+    const { triggered_by, received_by } = req.body;
     await saveNotification({
-        notiType: 'friendAccepted',
-        userId: targetUserId,
-        targetUserId: userId,
+        notification_type: 'friendRequestAccepted',
+        triggered_by, // The one accepting the request
+        received_by, // The one who sent the request
     }, res);
 };
 
 // Create a friend rejection notification
 const createFriendRejectedNotification = async (req, res) => {
-    const { userId, targetUserId } = req.body;
+    const { triggered_by, received_by } = req.body;
     await saveNotification({
-        notiType: 'friendRejected',
-        userId: targetUserId,
-        targetUserId: userId,
+        notification_type: 'friendRequestRejected',
+        triggered_by, // The one rejecting the request
+        received_by, // The one who sent the request
     }, res);
 };
 
-// Create a group request notification
-const createGroupRequestNotification = async (req, res) => {
-    const { userId, groupId } = req.body;
+// Create a group creation notification (when a group is successfully created)
+const createGroupCreationNotification = async (req, res) => {
+    const { triggered_by, received_by, group_id } = req.body;
     await saveNotification({
-        notiType: 'groupRequest',
-        userId: userId,
-        groupId: groupId,
+        notification_type: 'groupCreated',
+        triggered_by,  // Admin who created the group
+        received_by,   // User who requested the group creation
+        group_id,
+    }, res);
+};
+
+// Create a group edited notification (when a group is edited)
+const createGroupEditedNotification = async (req, res) => {
+    const { triggered_by, received_by, group_id } = req.body;
+    await saveNotification({
+        notification_type: 'groupEdited',
+        triggered_by,  // Admin who edited the group
+        received_by,   // Group members who are being notified
+        group_id,
+    }, res);
+};
+
+// Create a group deleted notification (when a group is deleted)
+const createGroupDeletedNotification = async (req, res) => {
+    const { triggered_by, received_by, group_id } = req.body;
+    await saveNotification({
+        notification_type: 'groupDeleted',
+        triggered_by,  // Admin who deleted the group
+        received_by,   // Group members who are being notified
+        group_id,
+    }, res);
+};
+// Create a group request notification
+const createJoinGroupRequestNotification = async (req, res) => {
+    const { triggered_by, group_id } = req.body;
+    await saveNotification({
+        notification_type: 'groupRequest',
+        triggered_by,
+        received_by: req.adminId, // The admin will receive the request
+        group_id,
+    }, res);
+};
+
+// Create a group join acceptance notification
+const createJoinGroupAcceptedNotification = async (req, res) => {
+    const { triggered_by, group_id } = req.body;
+    await saveNotification({
+        notification_type: 'groupRequestAccepted',
+        triggered_by: req.adminId, // The admin who accepted the request
+        received_by: triggered_by, // The user who sent the request
+        group_id,
     }, res);
 };
 
 // Create a group rejection notification
-const createGroupRejectedNotification = async (req, res) => {
-    const { userId, groupId } = req.body;
+const createJoinGroupRejectedNotification = async (req, res) => {
+    const { triggered_by, group_id } = req.body;
     await saveNotification({
-        notiType: 'groupRejected',
-        userId: userId,
-        groupId: groupId,
+        notification_type: 'groupRequestRejected',
+        triggered_by: req.adminId, // The admin who rejected the request
+        received_by: triggered_by, // The user who sent the request
+        group_id,
     }, res);
 };
 
+
 // Create a comment notification
 const createCommentNotification = async (req, res) => {
-    const { userId, postId } = req.body;
+    const { triggered_by, received_by, post_id, comment_id } = req.body;
     await saveNotification({
-        notiType: 'comment',
-        userId: userId,
-        targetUserId: req.user.id, // The user who commented
-        postId: postId,
+        notification_type: 'comment',
+        triggered_by,
+        received_by,
+        post_id,
+        comment_id,
     }, res);
 };
 
 // Create a reaction notification
 const createReactionNotification = async (req, res) => {
-    const { userId, postId } = req.body;
+    const { triggered_by, received_by, post_id, reaction_id } = req.body;
     await saveNotification({
-        notiType: 'reaction',
-        userId: userId,
-        targetUserId: req.user.id, // The user who reacted
-        postId: postId,
+        notification_type: 'reaction',
+        triggered_by,
+        received_by,
+        post_id,
+        reaction_id,
+    }, res);
+};
+
+// Create a post notification for friends/followers
+const createPostNotificationForFriends = async (req, res) => {
+    const { triggered_by, received_by, post_id } = req.body;
+    await saveNotification({
+        notification_type: 'postCreatedForFriends',
+        triggered_by,  // User who created the post
+        received_by,   // Friend/follower
+        post_id,
+    }, res);
+};
+
+// Create a post notification for group members
+const createPostNotificationForGroup = async (req, res) => {
+    const { triggered_by, received_by, post_id, group_id } = req.body;
+    await saveNotification({
+        notification_type: 'postCreatedForGroup',
+        triggered_by,  // User who created the post
+        received_by,   // Group member
+        post_id,
+        group_id,      // Group where the post was created
+    }, res);
+};
+
+
+const createNewUserNotification = async (req, res) => {
+    const { triggered_by, received_by } = req.body;
+    await saveNotification({
+        notification_type: 'newUserCreated',
+        triggered_by,  // System admin or system event
+        received_by,   // New user's ID
     }, res);
 };
 
 // Delete a notification
 const deleteNotification = async (req, res) => {
-    const { findNotification } = req;
-    await findNotification.deleteOne();
-    return res.sendStatus(200);
+    const { id } = req.params;
+    try {
+        const notification = await notificationModel.findById(id);
+        if (!notification) return res.status(404).json({ error: 'Notification not found' });
+
+        await notification.deleteOne();
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while deleting the notification.' });
+    }
 };
 const markNotificationAsRead = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const notification = await Notification.findByIdAndUpdate(id, { isRead: true }, { new: true });
-
+        const notification = await notificationModel.findByIdAndUpdate(id, { isRead: true }, { new: true });
         if (!notification) {
-            return res.status(404).send({ error: 'Notification not found' });
+            return res.status(404).json({ error: 'Notification not found' });
         }
-
-        res.send(notification);
+        res.json(notification);
     } catch (error) {
-        res.status(500).send({ error: 'An error occurred while marking the notification as read.' });
+        res.status(500).json({ error: 'An error occurred while marking the notification as read.' });
     }
 };
-
 
 module.exports = {
     getAllNotifications,
@@ -133,8 +223,15 @@ module.exports = {
     createFriendRequestNotification,
     createFriendAcceptedNotification,
     createFriendRejectedNotification,
-    createGroupRequestNotification,
-    createGroupRejectedNotification,
+    createGroupCreationNotification,
+    createGroupEditedNotification,
+    createGroupDeletedNotification,
+    createJoinGroupRequestNotification,
+    createNewUserNotification,
+    createJoinGroupAcceptedNotification,
+    createJoinGroupRejectedNotification,
+    createPostNotificationForFriends,
+    createPostNotificationForGroup,
     createCommentNotification,
     createReactionNotification,
     deleteNotification,

@@ -2,6 +2,7 @@ const groupModel = require('../models/groupModel.js');
 const userModel = require('../models/userModel.js');
 const membershipModel = require('../models/membershipModel.js'); 
 const { matchedData, validationResult } = require('express-validator');
+const { createGroupCreationNotification,createGroupEditedNotification,createGroupDeletedNotification  } = require('../controllers/notificationController');
 
 const getUserGroups = async (req, res) => {
     try {
@@ -63,7 +64,10 @@ const createNewGroup = async (req, res) => {
 
         // Save the updated request
         await request.save();
-
+        
+        await createGroupCreationNotification({
+            body: { triggered_by: req.adminId, received_by: request.user_id, group_id: savedGroup._id }
+        }, res);
         // Respond with a success message and the created group
         res.status(200).json({ message: 'Group created successfully', group: savedGroup });
     } catch (error) {
@@ -76,14 +80,41 @@ const createNewGroup = async (req, res) => {
 
 const editGroup = async(req, res) => {
     const { body, findGroup } = req;
-    Object.assign(findGroup, body);
-    await findGroup.save();
-    return res.sendStatus(200);
+    try {
+        // Notify group members about the edit
+        const members = await membershipModel.find({ group_id: findGroup._id, isApproved: true });
+        for (const member of members) {
+            await createGroupEditedNotification({
+                body: { triggered_by: req.adminId, received_by: member.user_id, group_id: findGroup._id }
+            }, res);
+        }
+
+        // Update group details
+        Object.assign(findGroup, body);
+        await findGroup.save();
+        return res.sendStatus(200);
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating group' });
+    }
 };
 const  deleteGroup = async (req, res) => {
     const { findGroup } = req;
-    await findGroup.remove(); 
-    return res.sendStatus(200);
+
+    try {
+        // Notify all members about the group deletion
+        const members = await membershipModel.find({ group_id: findGroup._id, isApproved: true });
+        for (const member of members) {
+            await createGroupDeletedNotification({
+                body: { triggered_by: req.adminId, received_by: member.user_id, group_id: findGroup._id }
+            }, res);
+        }
+
+        // Delete the group
+        await findGroup.remove();
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).json({ error: 'Error deleting group' });
+    }
 };
 
 module.exports = {getUserGroups,getOneGroup,createNewGroup,editGroup,deleteGroup};

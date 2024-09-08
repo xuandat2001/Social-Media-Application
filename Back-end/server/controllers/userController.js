@@ -2,6 +2,7 @@ const userModel = require('../models/userModel.js');
 const bcrypt = require('bcrypt');
 const { matchedData, validationResult } = require('express-validator');
 const fs = require('fs');
+const { createFriendRequestNotification, createFriendAcceptedNotification, createFriendRejectedNotification, createNewUserNotification  } = require('../controllers/notificationController');
 
 const getAllUsers = async (req, res) => {
     const { query: { filter, value } } = req;
@@ -44,6 +45,11 @@ const createNewUser = async (req, res) => {
         });
         const savedUser = await newUser.save();
 
+        // Trigger notification for new user creation
+        await createNewUserNotification({
+            body: { triggered_by: 'SystemAdminId', received_by: savedUser._id },  // Replace 'SystemAdminId' with actual admin ID if needed
+        }, res);
+
         // Return the saved user
         res.status(201).json({ message: 'New user successfully created' })
     } catch (error) {
@@ -64,4 +70,62 @@ const  deleteUser = async (req, res) => {
     return res.sendStatus(200);
 };
 
-module.exports = {getAllUsers,getOneUser,createNewUser,editUser,deleteUser};
+// Send a friend request
+const sendFriendRequest = async (req, res) => {
+    const { userId, targetUserId } = req.body;
+
+    try {
+        // Logic to send friend request
+        await userModel.updateOne({ _id: userId }, { $addToSet: { friendRequestsSent: targetUserId } });
+        await userModel.updateOne({ _id: targetUserId }, { $addToSet: { friendRequestsReceived: userId } });
+
+        // Trigger friend request notification
+        await createFriendRequestNotification({
+            body: { triggered_by: userId, received_by: targetUserId }
+        }, res);
+
+        res.status(200).json({ message: 'Friend request sent!' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error sending friend request.' });
+    }
+};
+// Accept a friend request
+const acceptFriendRequest = async (req, res) => {
+    const { userId, targetUserId } = req.body;
+
+    try {
+        // Logic to accept the friend request
+        await userModel.updateOne({ _id: userId }, { $addToSet: { friends: targetUserId }, $pull: { friendRequestsReceived: targetUserId } });
+        await userModel.updateOne({ _id: targetUserId }, { $addToSet: { friends: userId }, $pull: { friendRequestsSent: userId } });
+
+        // Trigger friend accepted notification
+        await createFriendAcceptedNotification({
+            body: { triggered_by: userId, received_by: targetUserId }
+        }, res);
+
+        res.status(200).json({ message: 'Friend request accepted!' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error accepting friend request.' });
+    }
+};
+
+// Reject a friend request
+const rejectFriendRequest = async (req, res) => {
+    const { userId, targetUserId } = req.body;
+
+    try {
+        // Logic to reject the friend request
+        await userModel.updateOne({ _id: userId }, { $pull: { friendRequestsReceived: targetUserId } });
+        await userModel.updateOne({ _id: targetUserId }, { $pull: { friendRequestsSent: userId } });
+
+        // Trigger friend rejected notification
+        await createFriendRejectedNotification({
+            body: { triggered_by: userId, received_by: targetUserId }
+        }, res);
+
+        res.status(200).json({ message: 'Friend request rejected.' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error rejecting friend request.' });
+    }
+};
+module.exports = {getAllUsers,getOneUser,createNewUser,editUser,deleteUser, sendFriendRequest, acceptFriendRequest, rejectFriendRequest};

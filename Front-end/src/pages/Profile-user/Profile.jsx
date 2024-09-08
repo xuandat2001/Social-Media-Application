@@ -1,37 +1,57 @@
 import React, { useEffect, useState } from "react";
 import Post from '../../components/Post';
+import { Link } from 'react-router-dom';
 import { useAuth } from "../../Authentication_Context/Auth_Provider";
 
-const Profile = (/*{ profileId }*/) => {
+const Profile = () => {
+  const { user } = useAuth(); // Retrieve user information from AuthContext
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {user} = useAuth();
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/profile/${user.id}`);
-        const data = await response.json()
+      if (!user) {
+        setError('No user is logged in');
+        setLoading(false);
+        return;
+      }
 
-        if (!response.ok) {
+      try {
+        // First, fetch the profile ID based on the user ID
+        const userProfileResponse = await fetch(`http://localhost:3000/api/profiles?userId=${user._id}`);
+        const userProfileData = await userProfileResponse.json();
+
+        if (!userProfileResponse.ok) {
+          throw new Error('Failed to fetch user profile data');
+        }
+
+        if (userProfileData.length === 0) {
+          throw new Error('No profile found for this user');
+        }
+
+        const profileId = userProfileData[0]._id; // Assuming the user has only one profile
+
+        // Now, fetch the profile details using the profile ID
+        const profileResponse = await fetch(`http://localhost:3000/api/profile/${profileId}`);
+        const profileData = await profileResponse.json();
+
+        if (!profileResponse.ok) {
           throw new Error('Failed to fetch profile data');
         }
 
-        
-        console.log('Fetched profile data:', data)
-        setProfile(data);
+        setProfile(profileData);
         setLoading(false);
-        
+
       } catch (err) {
         setError(err.message);
         setLoading(false);
-      } 
+      }
     };
 
     fetchProfile();
-  }, [user.id]);
-  
+  }, [user]);
+
   if (loading) {
     return <p>Loading profile...</p>;
   }
@@ -61,7 +81,9 @@ const Profile = (/*{ profileId }*/) => {
                 {profile.bio}
               </p>
               <div className="profile-actions">
-                <p>Edit</p> {/*will be linked later*/}
+                <Link to="/editprofile">
+                <p>Edit</p> 
+                </Link>
               </div>
             </div>
           </div>

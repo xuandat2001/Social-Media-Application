@@ -1,21 +1,27 @@
-import React, { useState } from "react";
-import NotificationPanel from "./NotificationPanel";
-import "../css/HeaderNoti.css";
+import React, { useEffect, useState } from 'react';
+import '../css/HeaderNoti.css';
 
 const HeaderNoti = () => {
-  const [isNotificationPanelVisible, setNotificationPanelVisible] =
-    useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const userId = 'currentUserId';  // Replace with the actual logged-in user's ID
 
-  const toggleNotificationPanel = () => {
-    setNotificationPanelVisible(!isNotificationPanelVisible);
-  };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetch(`/api/notifications?userId=${userId}&isRead=false`)
+        .then(response => response.json())
+        .then(data => setUnreadCount(data.length))
+        .catch(error => console.error('Error fetching unread notifications:', error));
+    }, 10000); // Poll every 10 seconds, staggered from NotificationPanel
+
+    return () => clearInterval(intervalId); // Cleanup interval
+  }, [userId]);
 
   return (
     <div className="nav-icons-noti">
-      <span className="material-icons" onClick={toggleNotificationPanel}>
+      <i className="material-icons" onClick={() => window.location.href = '/notifications'}>
         notifications
-      </span>
-      {isNotificationPanelVisible && <NotificationPanel />}
+      </i>
+      {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
     </div>
   );
 };

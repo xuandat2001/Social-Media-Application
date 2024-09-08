@@ -1,5 +1,7 @@
 const commentModel = require('../models/commentModel.js');
 const { matchedData, validationResult } = require('express-validator');
+const { createCommentNotification } = require('../controllers/notificationController');
+const postModel = require('../models/postModel.js'); // Import the post model to get the post owner's ID
 
 const getAllComments = async (req, res) => {
     const { query: { filter, value } } = req;
@@ -18,12 +20,24 @@ const getOneComment =  async(req, res) => {
     res.send(findComment);
 };
 const createNewComment = async(req, res) => {
+    const { postId, userId, commentText } = req.body;
     const result = validationResult(req);
     if (!result.isEmpty()) return res.status(400).send({ errors: result.array() });
+
     const data = matchedData(req);
     const newComments = new commentModel(data);
     const savedComments = await newComments.save();
+    
+    const post = await postModel.findById(postId);
+    if (!post) {
+        return res.status(404).send({ error: 'Post not found' });
+    }
     res.status(201).send(savedComments);
+    await createCommentNotification({
+        body: { triggered_by: userId, received_by: post.ownerId, post_id: postId }
+    }, res);
+
+    res.status(201).send(savedComment);
 };
 const editComment = async(req, res) => {
     const { body, findComment } = req;

@@ -1,52 +1,91 @@
 import React, { useEffect, useState } from 'react';
 import '../css/NotificationPanel.css';
 
-const NotificationPanel = ({ userId }) => {  // Assume userId is passed as a prop
+const NotificationPanel = () => {
   const [notifications, setNotifications] = useState([]);
+  const userId = 'currentUserId'; // Replace with the actual logged-in user's ID
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Polling interval to fetch new notifications
+    const intervalId = setInterval(() => {
       fetch(`/api/notifications?userId=${userId}`)
         .then(response => response.json())
-        .then(data => setNotifications(data));
-    }, 2000); // Poll every 2 seconds
+        .then(data => setNotifications(data))
+        .catch(error => console.error('Error fetching notifications:', error));
+    }, 5000); // Poll every 5 seconds
 
-    return () => clearInterval(interval);
-  }, [userId]);  // Ensure the effect reruns if userId changes
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [userId]);
+  const handleNotificationClick = async (notification) => {
+    try {
+      const response = await fetch(`/api/notifications/${notification._id}/read`, { method: 'PUT' });
 
-  const handleNotificationClick = (notification) => {
-    // Mark the notification as read
-    fetch(`/api/notifications/${notification._id}/read`, {
-      method: 'PUT',
-    }).then(() => {
-      switch (notification.notiType) {
-        case 'friendRequest':
-          window.location.href = `/profile/${notification.targetUserId}`;
-          break;
-        case 'friendAccepted':
-          window.location.href = `/profile/${notification.targetUserId}`;
-          break;
-        case 'friendRejected':
-          alert('Your friend request was rejected.');
-          break;
-        case 'groupRequest':
-          window.location.href = `/group/${notification.groupId}`;
-          break;
-        case 'groupRejected':
-          alert('Your group join request was rejected.');
-          break;
-        case 'comment':
-          window.location.href = `/post/${notification.postId}`;
-          break;
-        case 'reaction':
-          window.location.href = `/post/${notification.postId}`;
-          break;
-        default:
-          break;
+      if (!response.ok) {
+        throw new Error('Failed to mark notification as read.');
       }
-    });
 
+      const redirectURL = determineRedirectURL(notification);
+
+      if (redirectURL) {
+        window.location.href = redirectURL;
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      alert('There was an error marking this notification as read. Please try again.');
+    }
   };
+
+  const determineRedirectURL = (notification) => {
+    switch (notification.notification_type) {
+      case 'friendRequest':
+        return `/profile/${notification.targetUserId}`;
+      case 'friendAccepted':
+        return `/profile/${notification.targetUserId}`;
+      case 'friendRejected':
+        alert('Your friend request was rejected.');
+        return; // No redirection needed, just an alert
+      case 'groupRequest':
+        return `/group/${notification.groupId}`;
+      case 'groupRequestAccepted':
+        return `/group/${notification.groupId}`;
+      case 'groupRequestRejected':
+        alert(`Your join request to Group ${notification.groupId} was rejected.`);
+        return; // No redirection needed, just an alert
+      case 'postCreatedForFriends':
+        return `/post/${notification.post_id}`;
+      case 'postCreatedForGroup':
+        return `/post/${notification.post_id}`;
+      case 'groupEdited':
+        return `/group/${notification.groupId}`;
+      case 'groupDeleted':
+        alert(`The group ${notification.groupId} has been deleted.`);
+        return; // No redirection needed, just an alert
+      case 'comment':
+        return `/post/${notification.postId}`;
+      case 'reaction':
+        return `/post/${notification.postId}`;
+      default:
+        return '/'; // Default to home if notification type is unknown
+    }
+  };
+
+
+  const notificationMessages = {
+    friendRequest: 'New Friend Request',
+    friendAccepted: 'Friend Request Accepted',
+    groupRequest: (notif) => `New Group Join Request from ${notif.triggered_by}`,
+    postCreatedForFriends: 'New Post from a Friend',
+    postCreatedForGroup: 'New Post in a Group',
+    groupEdited: 'Group Edited',
+    groupDeleted: 'Group Deleted',
+    comment: 'New Comment on Your Post',
+    reaction: 'Someone Reacted to Your Post',
+    groupRequestAccepted: (notif) => `Your Join Request to Group ${notif.group_id} was Accepted`,
+    groupRequestRejected: (notif) => `Your Join Request to Group ${notif.group_id} was Rejected`,
+  };
+
+  const validNotificationTypes = Object.keys(notificationMessages);
 
   return (
     <div className="notification-panel">
@@ -56,15 +95,16 @@ const NotificationPanel = ({ userId }) => {  // Assume userId is passed as a pro
           <li
             key={index}
             onClick={() => handleNotificationClick(notif)}
-            className={`newest-notification ${notif.isRead ? 'notification-read' : 'notification-unread'} ${notif.notiType}`}
-          >                        <div className="notification-content">
-              {notif.notiType === 'friendRequest' && 'New Friend Request'}
-              {notif.notiType === 'friendAccepted' && 'Friend Request Accepted'}
-              {notif.notiType === 'friendRejected' && 'Friend Request Rejected'}
-              {notif.notiType === 'groupRequest' && 'New Group Request'}
-              {notif.notiType === 'groupRejected' && 'Group Request Rejected'}
-              {notif.notiType === 'comment' && 'New Comment on Your Post'}
-              {notif.notiType === 'reaction' && 'New Reaction on Your Post'}
+            className={`newest-notification ${notif.isRead ? 'notification-read' : 'notification-unread'}`}  // Dynamically apply the read/unread classes
+          >
+            <div className="notification-content">
+              {
+                validNotificationTypes.includes(notif.notification_type)
+                  ? typeof notificationMessages[notif.notification_type] === 'function'
+                    ? notificationMessages[notif.notification_type](notif) // Use function for custom message rendering
+                    : notificationMessages[notif.notification_type] // Use string directly if it's a static message
+                  : 'Unknown Notification'
+              }
             </div>
           </li>
         ))}

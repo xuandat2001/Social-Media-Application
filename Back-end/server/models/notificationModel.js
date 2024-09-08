@@ -27,7 +27,11 @@ const notificationSchema = new mongoose.Schema({
     reaction_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Reaction',
-    },
+    }, 
+    isRead: {
+        type: Boolean,
+        default: false, 
+    }
 });
 
 const Notification = mongoose.models.Notification || mongoose.model('notifications', notificationSchema);
