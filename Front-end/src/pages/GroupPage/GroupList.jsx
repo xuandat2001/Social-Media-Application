@@ -9,6 +9,7 @@ function GroupList() {  // Assuming you pass userId as a prop
     const [groups, setGroups] = useState({ adminGroups: [], memberGroups: [] }); // State to hold groups
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [strangerList, setStrangerList] = useState([]);
     const { user } = useAuth();
     const closeCreateGroupBox = () => {
         setShowCreateGroupBox(false);
@@ -31,7 +32,18 @@ function GroupList() {  // Assuming you pass userId as a prop
 
         fetchGroups();
     }, [user.id]);
-
+    useEffect(() => {
+        const fetchStrangers = async () => {
+          try {
+            const response = await fetch('http://localhost:3000/api/users');
+            const data = await response.json();
+            setStrangerList(data);
+          } catch (error) {
+            console.error('Error fetching users', error);
+          }
+        };
+        fetchStrangers();
+      }, []);
     if (loading) return <p>Loading groups...</p>;
     if (error) return <p>Error loading groups: {error}</p>;
 
@@ -92,7 +104,7 @@ function GroupList() {  // Assuming you pass userId as a prop
                         </div>
                     </div>
                     <div className="col-4 sidebar">
-                        <FriendSidebar />
+                        <FriendSidebar strangerList={strangerList} />
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
-function GroupHeader({ groupName, groupImage, groupMember }) {
+function GroupHeader({ groupName, groupImage, groupMember, onClick }) {
   return (
     <div className="container">
       <div className="header-group">
@@ -20,8 +20,8 @@ function GroupHeader({ groupName, groupImage, groupMember }) {
           </div>
           <div className="col-3">
             <div className="group-button">
-              <button className="btn group-invite"> + Invite</button>
-              <button className="btn group-request">Request(0)</button>
+              <button className="btn group-invite" onClick={onClick}> + Invite</button>
+              
             </div>
           </div>
         </div>
@@ -32,9 +32,6 @@ function GroupHeader({ groupName, groupImage, groupMember }) {
             </a>
             <a className="nav-link" href="#">
               Member
-            </a>
-            <a className="nav-link" href="#">
-              Media
             </a>
           </nav>
         </div>

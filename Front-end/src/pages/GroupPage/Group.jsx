@@ -3,16 +3,18 @@ import { useParams } from "react-router-dom";
 import Post from "../../components/Post.jsx";
 import testImage from "../../image/Screenshot 2024-08-12 000128.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+import { faGlobe, faUserPlus } from "@fortawesome/free-solid-svg-icons"; // Add user icon
 import "../../css/group.css";
 import GroupHeader from "./GroupPageComponent/GroupHeader.jsx";
 import GroupRule from "./GroupPageComponent/GroupRule.jsx";
+import InvitationBox from "../GroupPage/GroupPageComponent/invitationBox.jsx"; // Import the InvitationBox
 
 function Group() {
   const { groupId } = useParams(); // Get groupId from URL
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showInvitation, setShowInvitation] = useState(false); // State for invitation box
 
   useEffect(() => {
     const fetchGroupDetails = async () => {
@@ -45,26 +47,7 @@ function Group() {
       numberOfReaction: 62,
       numberOfComment: 10,
     },
-    {
-      id: 2,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
-    {
-      id: 3,
-      avatar: testImage,
-      userName: "Smiling",
-      content: "Hello",
-      logo: <FontAwesomeIcon icon={faGlobe} />,
-      image: testImage,
-      numberOfReaction: 62,
-      numberOfComment: 10,
-    },
+    // other posts
   ];
 
   return (
@@ -73,10 +56,13 @@ function Group() {
         groupName={group?.group_name}
         groupImage={`data:image/png;base64,${group?.groupPicture}`}
         groupMember={group?.members?.length || 0}
+        onClick={() => setShowInvitation(true)}
       />
+
       <div className="container-fluid">
         <div className="row">
           <div className="col-8">
+
             {posts.map((post) => (
               <Post
                 key={post.id}
@@ -90,11 +76,20 @@ function Group() {
               />
             ))}
           </div>
+
           <div className="col-4 fixed-rule">
             <GroupRule />
           </div>
         </div>
       </div>
+
+      {showInvitation && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <InvitationBox onClose={() => setShowInvitation(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

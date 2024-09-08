@@ -1,9 +1,8 @@
 import "../css/FriendSidebar.css";
 import testImage from "../image/Screenshot 2024-08-12 000128.png"; // Placeholder image
-import { useAuth } from "../Authentication_Context/Auth_Provider";
-
-function FriendSidebar ({ strangerList }) {
-  const { user } = useAuth(); // Assuming useAuth provides the logged-in user details
+import { useAuth } from "../Authentication_Context/Auth_Provider"
+function FriendSidebar ({ strangerList = [] }) {
+  const { user } = useAuth(); // Ensure user is defined
 
   const sendFriendRequest = async (strangerId) => {
     try {
@@ -27,29 +26,32 @@ function FriendSidebar ({ strangerList }) {
   return (
     <div className="friend-sidebar">
       <h2 className="title">Suggested Friends</h2>
-      {strangerList.map((stranger) => (
-        <div key={stranger._id} className="stranger-item">
-          <div className="row">
-            <div className="col-6">
-              <div className="user-info">
-                <img
-                  src={stranger.userAvatar ? `data:image/png;base64,${stranger.userAvatar}` : testImage}
-                  alt={stranger.userName}
-                  className="avatar-stranger"
-                />
-                <p className="user-name">{stranger.userName}</p>
+      {strangerList.length > 0 ? (
+        strangerList.map((stranger) => (
+          <div key={stranger._id} className="stranger-item">
+            <div className="row">
+              <div className="col-6">
+                <div className="user-info">
+                  <img
+                    src={stranger.userAvatar ? `data:image/png;base64,${stranger.userAvatar}` : testImage}
+                    alt={stranger.userName}
+                    className="avatar-stranger"
+                  />
+                  <p className="user-name">{stranger.userName}</p>
+                </div>
+              </div>
+              <div className="col-6">
+                <button className="btn btn-primary add-friend-btn" onClick={() => sendFriendRequest(stranger._id)}>
+                  Add Friend
+                </button>
               </div>
             </div>
-            <div className="col-6">
-              <button className="btn btn-primary add-friend-btn" onClick={() => sendFriendRequest(stranger._id)}>
-                Add Friend
-              </button>
-            </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p>No suggested friends at the moment.</p>
+      )}
     </div>
   );
 }
-
 export default FriendSidebar;
