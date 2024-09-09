@@ -6,7 +6,7 @@ Tran Vu Nhat Tin (s3870729) - 5
 Nguyen Hoanh Minh (s3915233) - 5
 
 Demonstration Video link:
-
+https://rmiteduau.sharepoint.com/:v:/s/FullStackDevelopment265/ERXLGVyh0iFCp-ncFfxl34gBS2LZJuPWVq0EPcuXJFYx1Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=ZsXUSb
 
 Instructions on how to run the LinkBridge social application program :
 Step 1: Unzip the .zip downloaded .zip file containing this README.txt file, Front-end and Back-end folders.
@@ -15,9 +15,9 @@ Step 2: Open the folder containing all these mentioned items above on Visual Stu
 
 Step 3: Open the Integrated Terminal for the Back-end folder. 
         Install the following necessary packages and dependencies below:
-        npm install nodemon
-        npm install ...
-        Next, move into the 'server' subfolder using the command "cd .\server\" . Lastly, start the backend server using the command "nodemon .\index.js"
+        npm install
+        npm install nodemon (Optional but recommended)
+        Next, move into the 'server' subfolder using the command "cd .\server\" . Lastly, start the backend server using the command "nodemon .\index.js" or "node .\index.js"
 
 Step 4: Open the Integrated Terminal for the Front-end folder.
         Install all the necessary packages and dependencies by using the command "npm install"
