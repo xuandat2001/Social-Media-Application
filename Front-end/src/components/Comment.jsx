@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faFlag} from "@fortawesome/free-solid-svg-icons";
 import "../css/componentItem.css";
-function CommentItem({ imageUser, userName, content, numberOfReact = 1 }) {
+function Comment({ imageUser, userName, content, numberOfReact = 1 }) {
   const [showReactions, setShowReactions] = useState(false);
   const {icon,color,text} = useSelector(state=> state.reaction)
   return (
@@ -35,4 +35,4 @@ function CommentItem({ imageUser, userName, content, numberOfReact = 1 }) {
     </>
   );
 }
-export default CommentItem;
+export default Comment;

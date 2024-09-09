@@ -7,7 +7,7 @@ import {
 import testImage from "../image/Screenshot 2024-08-12 000128.png";
 import Post from "./Post";
 import "../css/writeComment.css";
-import CommentItem from "./Comment";
+import Comment from "./Comment";
 
 function CommentBox({ showComments, onClose }) {
   const post = {
@@ -78,7 +78,7 @@ function CommentBox({ showComments, onClose }) {
               <p>Comment:</p>
               <div className="show-comment">
                 {comments.map((comment) => (
-                  <CommentItem
+                  <Comment
                     key={comment.id}
                     imageUser={comment.imageUser}
                     userName={comment.userName}
