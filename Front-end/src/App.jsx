@@ -18,6 +18,7 @@ import GroupRequest from './pages/Admin-Site/GroupRequest';
 import ContentManagement from './pages/Admin-Site/ContentManagement';
 import Group from './pages/GroupPage/Group';
 import EditPostBox from './components/User-Site/EditPostBox';
+import MessageInput from './components/ReportMessage';
 
 const App = () => {
   const location = useLocation();

@@ -65,6 +65,20 @@ app.post('/login', async (req, res) => {
 
   
 app.use(mainRouter);
+const checkSession = (req, res, next) => {
+  if (req.session.user) {
+      console.log('User found in session:', req.session.user);
+      next(); // User is found, proceed to the next middleware or route handler
+  } else {
+      console.log('No user in session');
+      res.status(401).send('Unauthorized'); // No user found, return unauthorized response
+  }
+};
+
+// Example route protected by the session check
+app.get('/protected-route', checkSession, (req, res) => {
+  res.send('This is a protected route');
+});
 // MongoDB connection URL
 const CONNECTION_URL = 'mongodb+srv://AeRMITNo1:v2DUKnapXCtwNIxA@socialmediaapplinkbridg.g4vbw.mongodb.net/FullStackRMIT'
 const PORT = process.env.PORT || 3000;

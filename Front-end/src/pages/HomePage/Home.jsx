@@ -17,6 +17,7 @@ const Home = () => {
       try {
         const response = await fetch('http://localhost:3000/api/posts');
         const data = await response.json();
+        console.log(data);
         setPosts(data);
       } catch (error) {
         console.error('Error fetching posts', error);
@@ -42,19 +43,19 @@ const Home = () => {
                 {showCreatePostBox && (
                   <CreatePostBox showCreatePostBox={showCreatePostBox} closeCreatePostBox={closeCreatePostBox} />
                                 )}
-            {posts.map((post) => (
-              <Post        
-                key={post._id}
-                postId ={post._id}
-                avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
-                fullName={post.user && post.user.fullName ? post.user.fullName : 'Anonymous'}
-                content={post.content}
-                time={formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-                image={`data:image/png;base64,${post.image_url}`}
-                numberOfReaction={post.numberOfReaction}
-                numberOfComment={post.numberOfComment}
-              />
-            ))}
+                  {posts.map((post) => (
+                    <Post        
+                      key={post._id}
+                      postId ={post._id}
+                      avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
+                      fullName={post.user && post.user.fullName ? post.user.fullName : 'Anonymous'}
+                      content={post.content}
+                      time={formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                      image={`data:image/png;base64,${post.image_url}`}
+                      numberOfReaction={post.numberOfReaction}
+                      numberOfComment={post.numberOfComment}
+                    />
+                  ))}
           </div>
           <div className="col-4 sidebar">
             <FriendSidebar />

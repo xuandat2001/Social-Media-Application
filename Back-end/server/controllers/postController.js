@@ -154,10 +154,73 @@ const sharePost = async (req, res) => {
       res.status(500).json({ message: 'Failed to share post' });
     }
   };
-const  deletePost = async (req, res) => {
-    const { findPost } = req;
-    await findPost.deleteOne(); 
-    return res.sendStatus(200);
+  const deletePost = async (req, res) => {
+    try {
+        const { findPost } = req; // Access the post found by findPostById middleware
+        await findPost.deleteOne(); 
+        return res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting post:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+const  reportPost = async (req, res) => {
+    const { postId } = req.params;
+    const { reportReason, reportedBy } = req.body;
+
+    try {
+        // Find the post and update its report details
+        const post = await postModel.findByIdAndUpdate(
+            postId,
+            {
+                $set: {
+                    isReported: true,
+                    "reportDetails.reportedBy": reportedBy,
+                    "reportDetails.reportReason": reportReason,
+                    "reportDetails.reportDate": new Date(),
+                },
+            },
+            { new: true } // Return the updated post
+        );
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        return res.status(200).json({ message: "Post reported successfully", post });
+    } catch (error) {
+        console.error("Error reporting post:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+const getReportedPost = async (req, res) => {
+    // console.log(req.session.user); 
+
+    // if (!req.session.user) {
+    //     return res.status(401).json({ message: "Unauthorized. Please log in." });
+    // }
+
+    // const userId = req.session.user.id; 
+
+    try {
+        const reportedPosts = await postModel.find({
+            isReported: true,
+            
+        })
+
+        if (!reportedPosts || reportedPosts.length === 0) {
+            return res.status(404).json({ message: "No reported posts found." });
+        }
+
+        return res.status(200).json(reportedPosts);
+    } catch (error) {
+        console.error("Error fetching reported posts:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 };
 
-module.exports = {getAllPosts, getOnePost, createNewPost, editPost, deletePost, sharePost,getPostsByUser};
+
+  
+
+
+module.exports = {getAllPosts, getOnePost, createNewPost, editPost, deletePost, sharePost,getPostsByUser,reportPost,getReportedPost};

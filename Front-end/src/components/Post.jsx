@@ -150,7 +150,7 @@ function Post({
       {showReportMessage && (
         <div className="modal-overlay-report">
           <div className="modal-content-report">
-            <MessageInput onClose={() => setShowReportMessage(false)} />
+            <MessageInput onClose={() => setShowReportMessage(false) } postId ={postId}/>
           </div>
         </div>
       )}

@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-
-function MessageInput({ onClose }) {
+import { useAuth } from '../Authentication_Context/Auth_Provider';
+function MessageInput({ onClose, postId}) {
+    const {user} = useAuth();
     const [message, setMessage] = useState("");
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (message.trim()) {
-            console.log("Message sent:", message);
-            setMessage(""); // Clear input after sending
+            // Send the report details to the server
+            try {
+                const response = await fetch(`http://localhost:3000/report-post/${postId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        reportReason: message,
+                        reportedBy: user.id, // Pass the user ID of the person reporting the post
+                    }),
+                });
+
+                if (response.ok) {
+                    alert("Post reported successfully");
+                    setMessage(""); // Clear input after sending
+                    onClose(); // Close the report message box after success
+                } else {
+                    console.error("Error reporting post");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
         }
     };
 
@@ -24,13 +46,23 @@ function MessageInput({ onClose }) {
                     </button>
                 </div>
             </div>
-            
-
 
             {/* Message Input and Send Button Row */}
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Write your message"/>
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+            <div className="input-group mb-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Write your message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                />
+                <button
+                    className="btn btn-outline-secondary"
+                    type="button"
+                    onClick={handleSend}
+                >
+                    Send
+                </button>
             </div>
         </div>
     );
