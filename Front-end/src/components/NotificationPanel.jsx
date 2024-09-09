@@ -10,26 +10,20 @@ const NotificationPanel = ({ initData }) => {
     
     setNotifications(initData);
     // Polling interval to fetch new notifications
+    fetch(`http://localhost:3000/api/notifications/${user.id}`)
+    .then(response => response.json())
+    .then(data => {
+      {
+        if (Array.isArray(data.notifications)) {
+          setNotifications(data.notifications);
 
-    const intervalId = setInterval(() => {
-      fetch(`http://localhost:3000/api/notifications/${user.id}`)
-        .then(response => response.json())
-        .then(data => {
-          {
-            if (Array.isArray(data.notifications)) {
-              setNotifications(data.notifications);
-
-            } else {
-              console.error('Unexpected response format:', data.notifications);
-              setNotifications([]);
-            }
-          }
-        })
-        .catch(error => console.error('Error fetching notifications:', error));
-    }, 10000); // Poll every 5 seconds
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
+        } else {
+          console.error('Unexpected response format:', data.notifications);
+          setNotifications([]);
+        }
+      }
+    })
+    .catch(error => console.error('Error fetching notifications:', error));
   }, []);
 
 

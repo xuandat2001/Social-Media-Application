@@ -34,10 +34,6 @@ function HeaderNoti() {
     };
 
     fetchNotifications();
-
-    // Optionally, set up polling or use WebSocket to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 15000);  // Poll every 15 seconds
-    return () => clearInterval(intervalId);  // Cleanup interval on unmount
   }, []);
 
   const toggleNotifications = () => {
