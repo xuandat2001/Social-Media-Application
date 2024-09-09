@@ -9,21 +9,7 @@ import Post from "./Post";
 import "../css/writeComment.css";
 import Comment from "./Comment";
 
-function CommentBox({ showComments, onClose }) {
-  const post = {
-    id: 1,
-    avatar: testImage,
-    userName: "Smiling",
-    content: "Hello",
-    logo: <FontAwesomeIcon icon={faGlobe} />,
-    image: testImage,
-    numberOfReaction: 62,
-    numberOfComment: 10,
-  };
-
-  const commentDetail = {
-    userName: "Smiling",
-  };
+function CommentBox({ showComments, onClose, avatar, fullName, time,content, image, numberOfReaction, numberOfComment }) {
 
   const comments = [
     {
@@ -45,7 +31,6 @@ function CommentBox({ showComments, onClose }) {
       userName: "Messi",
     },
   ];
-
   return (
     <>
       {showComments && (
@@ -54,7 +39,7 @@ function CommentBox({ showComments, onClose }) {
             <div className="header-comment">
               <div className="row">
                 <div className="col-11">
-                  <h3>{commentDetail.userName}'s Post</h3>
+                  <h3>{fullName}'s Post</h3>
                 </div>
                 <div className="col-1">
                   <button onClick={onClose}>
@@ -64,15 +49,17 @@ function CommentBox({ showComments, onClose }) {
               </div>
             </div>
             <div className="post-comment">
-              <Post
-                avatar={post.avatar}
-                userName={post.userName}
-                content={post.content}
-                logo={post.logo}
-                image={post.image}
-                numberOfReaction={post.numberOfReaction}
-                numberOfComment={post.numberOfComment}
-              />
+            <Post        
+                      
+                    
+                      avatar={avatar}
+                      fullName={fullName}
+                      content={content}
+                      time={time}
+                      image={image}
+                      numberOfReaction={numberOfReaction}
+                      numberOfComment={numberOfComment}
+                    />
             </div>
             <div className="list-comment">
               <p>Comment:</p>
