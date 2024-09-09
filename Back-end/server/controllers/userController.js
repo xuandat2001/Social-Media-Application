@@ -50,11 +50,7 @@ const createNewUser = async (req, res) => {
         });
         const savedUser = await newUser.save();
 
-        // Trigger notification for new user creation
-        await createNewUserNotification({
-            body: { triggered_by: 'SystemAdminId', received_by: savedUser._id },  // Replace 'SystemAdminId' with actual admin ID if needed
-        }, res);
-
+       
         // Return the saved user
         res.status(201).json({ message: 'New user successfully created' })
     } catch (error) {

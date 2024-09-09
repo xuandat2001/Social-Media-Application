@@ -3,7 +3,7 @@ const fs = require('fs');
 const { matchedData, validationResult } = require('express-validator');
 const userModel = require('../models/userModel');  // Assuming user model has friends/followers
 const groupModel = require('../models/groupModel'); // Assuming group model exists
-const { createPostNotificationForFriends, createPostNotificationForGroup } = require('../controllers/notificationController');
+const { createPostNotification } = require('./notificationController.js');
 const getAllPosts = async (req, res) => {
     try {
         const posts = await postModel.find().populate('user', 'fullName userAvatar');
@@ -63,32 +63,11 @@ const createNewPost = async (req, res) => {
             image_url: imageHash,  // Store the image hash in the `image_url` field
             user: data.user
         };
-
+        
         // Create and save the post
         const newPost = new postModel(postData);
         const savedPost = await newPost.save();
-        
-        // // Notify friends/followers if the post is public and not in a group
-        // if (!data.group_id && postData.post_access_right === 'public') {
-        //     const user = await userModel.findById(data.user).populate('friends'); // Assuming user has friends
-        //     if (user && user.friends) {
-        //         for (const friend of user.friends) {
-        //             await createPostNotificationForFriends({
-        //                 body: { triggered_by: data.user, received_by: friend._id, post_id: savedPost._id }
-        //             }, res);
-        //         }
-        //     }
-        // }
-        // if (data.group_id) {
-        //     const group = await groupModel.findById(data.group_id).populate('members'); // Assuming group has members
-        //     if (group && group.members) {
-        //         for (const member of group.members) {
-        //             await createPostNotificationForGroup({
-        //                 body: { triggered_by: data.user, received_by: member._id, post_id: savedPost._id, group_id: data.group_id }
-        //             }, res);
-        //         }
-        //     }
-        // }
+
         return res.status(201).json(savedPost);
     } catch (error) {
         console.error('Error creating post:', error);

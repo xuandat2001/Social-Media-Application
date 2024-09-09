@@ -34,10 +34,10 @@ const createNewComment = async(req, res) => {
     }
     res.status(201).send(savedComments);
     await createCommentNotification({
-        body: { triggered_by: userId, received_by: post.ownerId, post_id: postId }
+        body: { triggered_by: userId, post_id: postId, comment_id: newComments.comment_id}
     }, res);
 
-    res.status(201).send(savedComment);
+    res.status(201).send(savedComments);
 };
 const editComment = async(req, res) => {
     const { body, findComment } = req;

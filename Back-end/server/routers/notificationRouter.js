@@ -1,7 +1,6 @@
 const express = require('express');
 const { 
     getAllNotifications,
-    getOneNotification,
     createFriendRequestNotification,
     createFriendAcceptedNotification,
     createFriendRejectedNotification,
@@ -10,8 +9,7 @@ const {
     createJoinGroupRejectedNotification,
     createCommentNotification,
     createReactionNotification,
-    createPostNotificationForFriends,
-    createPostNotificationForGroup,
+    createPostNotification,
     createNewUserNotification,
     createGroupCreationNotification,
     createGroupEditedNotification,
@@ -26,10 +24,7 @@ const {findNotificationById} = require('../middleware/findObject.js')
 const notificationRouter = express.Router();
 
 // Get all notifications for a user
-notificationRouter.get('/api/notifications', getAllNotifications);
-
-// Get a specific notification by ID
-notificationRouter.get('/api/notifications/:id', findNotificationById, getOneNotification);
+notificationRouter.get('/api/notifications/:userId', getAllNotifications);
 
 // Friend request notifications
 notificationRouter.post('/api/notifications/friend-request', createFriendRequestNotification);
@@ -42,8 +37,7 @@ notificationRouter.post('/api/notifications/group-accepted',  createJoinGroupAcc
 notificationRouter.post('/api/notifications/group-rejected',  createJoinGroupRejectedNotification);
 
 // Post creation notifications
-notificationRouter.post('/api/notifications/post-friends',  createPostNotificationForFriends);
-notificationRouter.post('/api/notifications/post-group',  createPostNotificationForGroup);
+notificationRouter.post('/api/notifications/post',  createPostNotification);
 
 // Comment and reaction notifications
 notificationRouter.post('/api/notifications/comment',  createCommentNotification);

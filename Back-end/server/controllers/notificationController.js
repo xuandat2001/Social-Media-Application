@@ -1,15 +1,12 @@
 const notificationModel = require('../models/notificationModel.js');
 const { validationResult } = require('express-validator');
-const Post = require('../models/postModel');  // Adjust the path to your actual model location
-const Group = require('../models/groupModel');  // Adjust the path to your actual model location
-const User = require('../models/userModel');
 const friednshipModel  = require('../models/friendshipModel.js')
 // Common function to save a notification
 const saveNotification = async (notificationData, res) => {
     try {
         const newNotification = new notificationModel(notificationData);
         const savedNotification = await newNotification.save();
-        res.status(201).json(savedNotification);
+        res.status(200).json(savedNotification);
     } catch (error) {
         res.status(500).json({ error: 'An error occurred while saving the notification.' });
     }
@@ -18,53 +15,49 @@ const saveNotification = async (notificationData, res) => {
 
 // Fetch all notifications for a user
 const getAllNotifications = async (req, res) => {
-    const { userId } = req.params;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-  
     try {
-      const notifications = await notificationModel.find({ received_by: userId })
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit);
-  
-      const total = await notificationModel.countDocuments({ received_by: userId });
-  
-      res.status(200).json({
-        notifications,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-      });
+        
+        const userId = req.params.userId;
+        // Now using userId from params instead of authentication
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const notifications = await notificationModel.find({ received_by: userId })
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit);
+
+        const total = await notificationModel.countDocuments({ received_by: userId });
+
+        res.status(200).json({
+            notifications,
+            currentPage: page,
+            totalPages: Math.ceil(total / limit),
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch notifications' });
-    }
-  };
-// Fetch a single notification by ID
-const getOneNotification = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const notification = await notificationModel.findById(id);
-        if (!notification) return res.status(404).json({ error: 'Notification not found' });
-        res.json(notification);
-    } catch (error) {
-        res.status(500).json({ error: 'An error occurred while retrieving the notification.' });
+        res.status(500).json({ message: 'Error fetching notifications', error: error.message });
     }
 };
 
 // Create a friend request notification
 const createFriendRequestNotification = async (req, res) => {
-    const { senderId, receiverId } = req.body;
-    const result = await sendFriendRequest(senderId, receiverId);
+    const { triggered_by, received_by } = req.body;
+    const result = await sendFriendRequest(triggered_by, received_by);
     return res.status(200).send(result);
 }
 // Create a friend request notification
-const sendFriendRequest = async (senderId, receiverId) => {
+const sendFriendRequest = async (triggered_by, received_by) => {
     try {
         // Check if the friendship already exists
         const existingFriendship = await friednshipModel.findOne({
             $or: [
-                { user1_id: senderId, user2_id: receiverId },
-                { user1_id: receiverId, user2_id: senderId },
+                { user1_id: triggered_by, user2_id: received_by },
+                { user1_id: received_by, user2_id: triggered_by },
             ],
         });
 
@@ -74,20 +67,19 @@ const sendFriendRequest = async (senderId, receiverId) => {
 
         // Create a new friendship request
         const newFriendship = new friednshipModel({
-            user1_id: senderId,
-            user2_id: receiverId,
+            user1_id: triggered_by,
+            user2_id: received_by,
             status: 'pending',
         });
         await newFriendship.save();
 
         // Create a notification for the receiver
         const newNotification = new notificationModel({
-            receiver_id: receiverId,
-            sender_id: senderId,
-            type: 'friend-request',
+            notification_type: 'friendRequest',
+            triggered_by: received_by,
+            received_by: triggered_by,
         });
         await newNotification.save();
-
         return { msg: 'Friend request sent successfully' };
     } catch (error) {
         console.error('Error sending friend request:', error);
@@ -204,37 +196,14 @@ const createReactionNotification = async (req, res) => {
     }, res);
 };
 
-// Create a post notification for friends/followers
-const createPostNotificationForFriends = async (req, res) => {
+const createPostNotification = async (req, res) => {
     const { triggered_by, received_by, post_id } = req.body;
-    await saveNotification({
-        notification_type: 'postCreatedForFriends',
-        triggered_by,  // User who created the post
-        received_by,   // Friend/follower
-        post_id,
-    }, res);
-};
-
-const createPostNotificationForGroup = async (req, res) => {
-    const { triggered_by, group_id, post_id } = req.body;
-  
-    // Validate post, group, and user existence
-    const post = await Post.findById(post_id);
-    const group = await Group.findById(group_id);
-    const user = await User.findById(triggered_by);
-  
-    if (!post || !group || !user) {
-      return res.status(400).json({ error: 'Invalid post, group, or user' });
-    }
-  
     // Create notification
     try {
       const newNotification = new Notification({
-        notification_type: 'postCreatedForGroup',
+        notification_type: 'postCreated',
         triggered_by,
-        received_by: group.members,  // Assuming you're notifying all group members
-        post_id,
-        group_id,
+        received_by,
       });
       await newNotification.save();
       res.status(201).json(newNotification);
@@ -254,34 +223,41 @@ const createNewUserNotification = async (req, res) => {
 
 // Delete a notification
 const deleteNotification = async (req, res) => {
-    const { id } = req.params;
     try {
-        const notification = await notificationModel.findById(id);
-        if (!notification) return res.status(404).json({ error: 'Notification not found' });
+        const notificationId = req.params.id;
 
-        await notification.deleteOne();
-        res.sendStatus(200);
+        const deletedNotification = await notificationModel.findByIdAndDelete(notificationId);
+
+        if (!deletedNotification) {
+            return res.status(404).json({ message: 'Notification not found' });
+        }
+
+        res.status(200).json({ message: 'Notification deleted' });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while deleting the notification.' });
+        res.status(500).json({ message: 'Error deleting notification', error: error.message });
     }
 };
 const markNotificationAsRead = async (req, res) => {
-    const { id } = req.params;
-
     try {
-        const notification = await notificationModel.findByIdAndUpdate(id, { isRead: true }, { new: true });
-        if (!notification) {
-            return res.status(404).json({ error: 'Notification not found' });
-        }
-        res.json(notification);
+      const userId = req.user.id; // Assuming `req.user.id` contains the authenticated user's ID
+  
+      const updatedNotifications = await notificationModel.updateMany(
+        { userId: userId, isRead: false }, // Find all unread notifications for this user
+        { isRead: true }                   // Mark them as read
+      );
+  
+      if (updatedNotifications.modifiedCount === 0) {
+        return res.status(404).json({ message: 'No unread notifications found' });
+      }
+  
+      res.status(200).json({ message: 'All notifications marked as read', updatedCount: updatedNotifications.modifiedCount });
     } catch (error) {
-        res.status(500).json({ error: 'An error occurred while marking the notification as read.' });
+      console.error('Error marking notifications as read:', error);
+      res.status(500).json({ message: 'Error marking notifications as read', error: error.message });
     }
-};
-
+  };
 module.exports = {
     getAllNotifications,
-    getOneNotification,
     createFriendRequestNotification,
     createFriendAcceptedNotification,
     createFriendRejectedNotification,
@@ -292,8 +268,7 @@ module.exports = {
     createNewUserNotification,
     createJoinGroupAcceptedNotification,
     createJoinGroupRejectedNotification,
-    createPostNotificationForFriends,
-    createPostNotificationForGroup,
+    createPostNotification,
     createCommentNotification,
     createReactionNotification,
     deleteNotification,

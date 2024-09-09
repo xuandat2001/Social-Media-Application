@@ -1,114 +1,133 @@
 import React, { useEffect, useState } from 'react';
 import '../css/NotificationPanel.css';
+import { useAuth } from '../Authentication_Context/Auth_Provider';
 
-const NotificationPanel = () => {
+const NotificationPanel = ({ initData }) => {
   const [notifications, setNotifications] = useState([]);
-  const userId = 'currentUserId'; // Replace with the actual logged-in user's ID
+  const { user } = useAuth();
 
   useEffect(() => {
+    
+    setNotifications(initData);
     // Polling interval to fetch new notifications
+
     const intervalId = setInterval(() => {
-      fetch(`/api/notifications?userId=${userId}`)
+      fetch(`http://localhost:3000/api/notifications/${user.id}`)
         .then(response => response.json())
-        .then(data => setNotifications(data))
+        .then(data => {
+          {
+            if (Array.isArray(data.notifications)) {
+              setNotifications(data.notifications);
+
+            } else {
+              console.error('Unexpected response format:', data.notifications);
+              setNotifications([]);
+            }
+          }
+        })
         .catch(error => console.error('Error fetching notifications:', error));
-    }, 5000); // Poll every 5 seconds
+    }, 10000); // Poll every 5 seconds
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
-  }, [userId]);
-  const handleNotificationClick = async (notification) => {
-    try {
-      const response = await fetch(`/api/notifications/${notification._id}/read`, { method: 'PUT' });
+  }, []);
 
-      if (!response.ok) {
-        throw new Error('Failed to mark notification as read.');
+
+    // Function to handle accepting a friend request using triggered_by and received_by
+    const handleAccept = async (triggeredBy, receivedBy) => {
+      try {
+        const response = await fetch(`http://localhost:3000/api/notifications/friend-accepted`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ triggered_by: triggeredBy, received_by: receivedBy })
+        });
+  
+        if (response.ok) {
+          console.log('Friend request accepted');
+          // Optionally update the state to remove the notification after acceptance
+          setNotifications(notifications.filter(notif => notif.triggered_by !== triggeredBy));
+        } else {
+          console.error('Failed to accept friend request');
+        }
+      } catch (error) {
+        console.error('Error accepting friend request:', error);
       }
+    };
+  const handleReject = async (triggeredBy, receivedBy) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/notifications/friend-rejected`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ triggered_by: triggeredBy, received_by: receivedBy })
+      });
 
-      const redirectURL = determineRedirectURL(notification);
-
-      if (redirectURL) {
-        window.location.href = redirectURL;
+      if (response.ok) {
+        console.log('Friend request rejected');
+        // Optionally update the state to remove the notification after rejection
+        setNotifications(notifications.filter(notif => notif.triggered_by !== triggeredBy));
+      } else {
+        console.error('Failed to reject friend request');
       }
     } catch (error) {
-      console.error('Error marking notification as read:', error);
-      alert('There was an error marking this notification as read. Please try again.');
+      console.error('Error rejecting friend request:', error);
     }
   };
-
-  const determineRedirectURL = (notification) => {
-    switch (notification.notification_type) {
+  const notificationMessage = (type) => {
+    switch (type) {
       case 'friendRequest':
-        return `/profile/${notification.targetUserId}`;
-      case 'friendAccepted':
-        return `/profile/${notification.targetUserId}`;
-      case 'friendRejected':
-        alert('Your friend request was rejected.');
-        return; // No redirection needed, just an alert
+        return 'You have new friend request';
+      case 'friendRequestAccepted':
+        return 'Your friend request was accepted';
+      case 'friendRequestRejected':
+        return 'Your friend request was rejected';
       case 'groupRequest':
-        return `/group/${notification.groupId}`;
+        return 'You had a join group request';
       case 'groupRequestAccepted':
-        return `/group/${notification.groupId}`;
+        return 'Your group request was accepted';
       case 'groupRequestRejected':
-        alert(`Your join request to Group ${notification.groupId} was rejected.`);
-        return; // No redirection needed, just an alert
-      case 'postCreatedForFriends':
-        return `/post/${notification.post_id}`;
-      case 'postCreatedForGroup':
-        return `/post/${notification.post_id}`;
+        return 'Your group request was rejected';
+      case 'postCreated':
+        return 'Your friend has created a post';
       case 'groupEdited':
-        return `/group/${notification.groupId}`;
+        return 'Your group admin edited group';
       case 'groupDeleted':
-        alert(`The group ${notification.groupId} has been deleted.`);
-        return; // No redirection needed, just an alert
+        return 'Your group admin deleted the group';
       case 'comment':
-        return `/post/${notification.postId}`;
+        return 'Your friend has just comment a post';
       case 'reaction':
-        return `/post/${notification.postId}`;
+        return 'Your friend has just reacted a post';
       default:
-        return '/'; // Default to home if notification type is unknown
+        return 'Unknow message'; 
     }
   };
-
-
-  const notificationMessages = {
-    friendRequest: 'New Friend Request',
-    friendAccepted: 'Friend Request Accepted',
-    groupRequest: (notif) => `New Group Join Request from ${notif.triggered_by}`,
-    postCreatedForFriends: 'New Post from a Friend',
-    postCreatedForGroup: 'New Post in a Group',
-    groupEdited: 'Group Edited',
-    groupDeleted: 'Group Deleted',
-    comment: 'New Comment on Your Post',
-    reaction: 'Someone Reacted to Your Post',
-    groupRequestAccepted: (notif) => `Your Join Request to Group ${notif.group_id} was Accepted`,
-    groupRequestRejected: (notif) => `Your Join Request to Group ${notif.group_id} was Rejected`,
-  };
-
-  const validNotificationTypes = Object.keys(notificationMessages);
-
   return (
-    <div className="notification-panel">
+    <div>
       <h2 className="notification-title">Notifications</h2>
       <ul>
         {notifications.map((notif, index) => (
-          <li
+          <li 
             key={index}
-            onClick={() => handleNotificationClick(notif)}
-            className={`newest-notification ${notif.isRead ? 'notification-read' : 'notification-unread'}`}  // Dynamically apply the read/unread classes
+            className={`newest-notification notification-read `}
           >
             <div className="notification-content">
               {
-                validNotificationTypes.includes(notif.notification_type)
-                  ? typeof notificationMessages[notif.notification_type] === 'function'
-                    ? notificationMessages[notif.notification_type](notif) // Use function for custom message rendering
-                    : notificationMessages[notif.notification_type] // Use string directly if it's a static message
-                  : 'Unknown Notification'
+                notificationMessage(notif.notification_type)
               }
+              {notif.notification_type === 'friendRequest' && (
+                  <div>
+                    <button className="accept-button" onClick={() => handleAccept(notif.triggered_by, notif.received_by)}>Accept</button>
+                    <button className="reject-button" onClick={() => handleReject(notif.triggered_by, notif.received_by)}>Reject</button>
+                  </div>
+                )}
             </div>
-          </li>
-        ))}
+          </li>))}
       </ul>
+
+
     </div>
   );
 };

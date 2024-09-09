@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import NotificationPanel from './NotificationPanel';  // Import NotificationPanel component
-import '../css/HeaderNoti.css';  // Assuming your existing styles
-const HeaderNoti = () => {
+import '../css/HeaderNoti.css'; 
+import { useAuth } from '../Authentication_Context/Auth_Provider';
+ // Assuming your existing styles
+function HeaderNoti() {
+  const { user } = useAuth(); 
   const [showNotifications, setShowNotifications] = useState(false);  // State to toggle panel visibility
   const [notifications, setNotifications] = useState([]);  // All notifications state (both read and unread)
 
@@ -9,18 +12,31 @@ const HeaderNoti = () => {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await fetch('/api/notifications');  // Fetch all notifications
-        const data = await response.json();
-        setNotifications(data);
+      
+        fetch(`http://localhost:3000/api/notifications/${user.id}`, {
+          method: 'GET',  // Specify the HTTP method
+          headers: {
+            'Content-Type': 'application/json' // The type of data you're sending
+          }  // Convert payload to JSON string
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Response:', data);
+            setNotifications(data.notifications);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+    
       } catch (error) {
-        console.error('Error fetching notifications:', error);
+        console.error('Error:', error);
       }
     };
 
     fetchNotifications();
 
     // Optionally, set up polling or use WebSocket to fetch notifications periodically
-    const intervalId = setInterval(fetchNotifications, 5000);  // Poll every 5 seconds
+    const intervalId = setInterval(fetchNotifications, 15000);  // Poll every 15 seconds
     return () => clearInterval(intervalId);  // Cleanup interval on unmount
   }, []);
 
@@ -45,7 +61,7 @@ const HeaderNoti = () => {
       {showNotifications && (
         <div className="notification-dropdown">
           {notifications.length > 0 ? (
-            <NotificationPanel notifications={notifications} /> 
+            <NotificationPanel initData={notifications} /> 
           ) : (
             <div className="no-notifications">No notifications available</div>
           )}
