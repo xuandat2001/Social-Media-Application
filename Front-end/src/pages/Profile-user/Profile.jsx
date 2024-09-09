@@ -59,19 +59,22 @@ const Profile = () => {
           <hr />
         </div>
         <div className="profile-content">
-        {posts.map((post) => (
-              <Post        
-                key={post._id}
-                postId ={post._id}
-                avatar={post.user && post.user.userAvatar ? `data:image/png;base64,${post.user.userAvatar}` : 'default-avatar-url'}
-                fullName={post.user && post.user.fullName ? post.user.fullName : 'Anonymous'}
-                content={post.content}
-                time={formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-                image={`data:image/png;base64,${post.image_url}`}
-                numberOfReaction={post.numberOfReaction}
-                numberOfComment={post.numberOfComment}
-              />
-            ))}
+        {posts.length > 0 ? (
+              posts.map((post) => (
+                <Post
+                  key={post.id}
+                  avatar={`data:image/png;base64,${post.user.userAvatar}`}
+                  userName={post.userName}
+                  content={post.content}
+                  logo={post.logo}
+                  image={post.image}
+                  numberOfReaction={post.numberOfReaction}
+                  numberOfComment={post.numberOfComment}
+                />
+              ))
+            ) : (
+              <p>No posts available.</p>
+            )}
         </div>
       </div>
       <div className="interaction-sidebar">
