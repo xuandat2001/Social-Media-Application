@@ -5,6 +5,9 @@ Hong Thieu Kiet (s3993986) - 5
 Tran Vu Nhat Tin (s3870729) - 5
 Nguyen Hoanh Minh (s3915233) - 5
 
+Demonstration Video link:
+
+
 Instructions on how to run the LinkBridge social application program :
 Step 1: Unzip the .zip downloaded .zip file containing this README.txt file, Front-end and Back-end folders.
 
@@ -22,11 +25,12 @@ Step 4: Open the Integrated Terminal for the Front-end folder.
         Finally, hold Ctrl and click on the link included in the console (it should be "http://localhost:5173/").
 
 Step 5: Here are a few test accounts for both users and admin:
-        username: jett ; password: 123
-        username: Kaido ; password: 123
+        username: Kiet ; password: 123
+        username: Dat ; password: 123
+        username: Tin ; password: 123
 
         For admin: Use the link "http://localhost:5173/admin" with the following account:
         username: admin
         password: admin
 
-Thank you and enjoy using the application!
+Thank you and enjoy using the LinkBridge application!
