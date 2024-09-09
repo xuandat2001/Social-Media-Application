@@ -155,7 +155,7 @@ function Post({
         </div>
       )}
       {showComments && (
-        <CommentBox showComments={showComments} onClose={closeComments} />
+        <CommentBox showComments={showComments} onClose={closeComments}  avatar={avatar} fullName={fullName} content={content} time ={time} image={image} numberOfReaction={numberOfReaction} numberOfComment={numberOfComment}/>
       )}
     </>
   );
